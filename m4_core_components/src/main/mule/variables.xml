@@ -9,13 +9,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<set-variable value="SenthilKumar" doc:name="firstName" doc:id="65705bfa-254a-49b6-ba1f-aa0b6e717124" variableName="firstName"/>
 		<set-variable value="Ganesan" doc:name="lastName" doc:id="170cdd97-c60e-4ed3-8c88-dc3fd16ab033" variableName="lastName"/>
 		<set-variable value="G" doc:name="Update lastName" doc:id="d236593b-a0de-4133-a1b2-c76370f68479" variableName="lastName"/>
-		<set-variable value='#[output application/json
+		<set-variable value='#[%dw 2.0
+output application/json
 ---
 {
 	no : 1234,
 	name: vars.firstName ++ vars.lastName,
 	salary: 10000.00,
-	doj : now() as String {format : "YYYY-MM-DD"}
+	doj : now() as String {format : "yyyy-MM-dd"}
 	
 }]' doc:name="employee" doc:id="25315970-6f36-4205-948a-4b88d02f14ec" variableName="employee" mimeType="application/json"/>
 		<logger level="INFO" doc:name="employee" doc:id="71997be4-dc8b-4b99-8d01-7d13020410cb" message="#[vars.employee]"/>
