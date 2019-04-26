@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <flow name="get:/async:core_components-config">
+        <logger message="Processing Async message flow stated" level="INFO" doc:name="Logger" />
+        <async doc:name="Async">
+            <flow-ref name="core_asyncSub_Flow" doc:name="core_asyncSub_Flow"/>
+        </async>
+        <logger message="Processing Async message flow completed" level="INFO" doc:name="Logger"/>
+        <set-payload value="Async flow completed" doc:name="Set Payload" />
+    </flow>
+    <sub-flow name="core_asyncSub_Flow">
+        <logger message="Async sub flow started" level="INFO" doc:name="Logger"/>
+        <foreach  doc:name="For Each" collection="[1,2,3,4,5,6,7,8,9,10]">
+            <http:request config-ref="HTTP_Request_Configuration" path="/html" method="GET" doc:name="HTTP"/>
+            <logger message="#[flowVars.counter]" level="INFO" doc:name="Logger"/>
+        </foreach>
+        <logger message="Async sub flow completed" level="INFO" doc:name="Logger"/>
+    </sub-flow>
+</mule>

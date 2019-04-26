@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <spring:beans>
+        <spring:bean id="FileCallableBean" name="FileCallableBean" class="mule.custom.component.FileCallable"/>
+    </spring:beans>
+    <flow name="get:/html:core_components-config">
+        <logger message="Processing html message flow " level="INFO" doc:name="Logger"/>
+        <set-variable variableName="filename" value="#[message.inboundProperties.'http.query.params'.filename]" doc:name="Variable"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.filename != null]">
+                <set-variable variableName="filepath" value="${app.home}/public/html/#[flowVars.filename]" doc:name="Variable"/>
+                <component doc:name="Java">
+                    <spring-object bean="FileCallableBean"/>
+                </component>
+                <set-payload value="#[payload]" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <http:static-resource-handler resourceBase="${app.home}/public" defaultFile="index.html" doc:name="HTTP Static Resource Handler"/>
+                <set-payload value="#[payload]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+</mule>

@@ -1,0 +1,44 @@
+#%RAML 0.8
+title: Mulesoft 3.9 core components example
+version: 1.0
+
+/helloworld:
+  get:
+    description: A simple HelloWorld example
+    responses: 
+      200:
+        body: 
+          text/html:    
+/async:
+  get:
+    description: Async scope is a branch processing block that executes simultaneously with the main flow
+    responses: 
+      200:
+        body: 
+          text/html:
+/html:
+  get:
+    description: HTTP static resource handler
+    queryParameters: 
+      filename:
+        description: Filename to be retuned to the http response
+        type: string
+        required: false
+    responses: 
+      200:
+        body: 
+          text/html:  
+/vm: 
+  get:
+    description: The Java Virtual Machine (VM) transport can be used for intra-JVM communication between Mule flows in same domain.
+    responses: 
+      200:
+        body: 
+          text/html:      
+/dw_excel: 
+  get:
+    description: Reading excel format files using 
+    responses: 
+      200:
+        body: 
+          text/html:            
