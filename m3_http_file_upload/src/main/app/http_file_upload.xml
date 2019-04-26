@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:context="http://www.springframework.org/schema/context" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+    <http:listener-config name="http_file_upload-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
+    <apikit:config name="http_file_upload-config" raml="http_file_upload.raml" consoleEnabled="false" doc:name="Router" keepRamlBaseUri="false" />
+    <http:request-config name="HTTP_Request_Configuration" host="localhost" port="8081" basePath="/api" doc:name="HTTP Request Configuration" />
+    <context:property-placeholder location="${mule.env}.properties" />
+    <flow name="http_file_upload-main">
+        <http:listener config-ref="http_file_upload-httpListenerConfig" path="/api/*" doc:name="HTTP" />
+        <apikit:router config-ref="http_file_upload-config" doc:name="APIkit Router" />
+        <exception-strategy ref="http_file_upload-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
+    </flow>
+    <flow name="http_file_upload-console">
+        <http:listener config-ref="http_file_upload-httpListenerConfig" path="/console/*" doc:name="HTTP" />
+        <apikit:console config-ref="http_file_upload-config" doc:name="APIkit Console" />
+    </flow>
+    <flow name="get:/file:http_file_upload-config">
+        <logger message="Show the static http file upload page" level="INFO" doc:name="Logger" />
+        <http:static-resource-handler resourceBase="${app.home}/public" defaultFile="index.html" doc:name="HTTP Static Resource Handler" />
+        <set-payload value="#[payload]" doc:name="Set Payload" />
+    </flow>
+
+    <flow name="post:/upload_browser:http_file_upload-config">
+        <logger message="file received from browser" level="INFO" doc:name="Logger"/>
+        <set-attachment attachmentName="file" value="#[message.inboundAttachments.file.dataSource.part.inputStream]" contentType="text/plain" doc:name="Attachment1"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/upload_mule" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="filename" value="#[message.inboundAttachments.file.dataSource.part.fileName]"/>
+                <http:header headerName="Content-Type" value="multipart/form-data"/>
+            </http:request-builder>
+        </http:request>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <object-to-string-transformer encoding="UTF-8" mimeType="text/html" doc:name="Object to String"/>
+
+    </flow>
+    <flow name="post:/upload_mule:http_file_upload-config">
+        <logger message="File received from mulesoft http component" level="INFO" doc:name="Logger"/>
+        <message-properties-transformer doc:name="Message Properties">
+            <add-message-property key="fileContent" value="#[message.inboundAttachments.file.dataSource.part.inputStream]"/>
+            <add-message-property key="fileName" value="#[message.inboundProperties.'http.query.params'.filename]"/>
+        </message-properties-transformer>
+        <set-payload value="#[message.outboundProperties.fileContent]" doc:name="Set Payload"/>
+        <file:outbound-endpoint path="${file.upload.path}" outputPattern="#[message.outboundProperties.fileName]" responseTimeout="10000" doc:name="File"/>
+        <set-payload value="File uploaded from mulesoft http component on #[server.dateTime] &lt;br/&gt;
+#[message.outboundProperties.fileName] created successfully under folder ${file.upload.path}" doc:name="Set Payload" encoding="UTF-8" mimeType="text/html"/>
+
+    </flow>
+    <apikit:mapping-exception-strategy name="http_file_upload-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

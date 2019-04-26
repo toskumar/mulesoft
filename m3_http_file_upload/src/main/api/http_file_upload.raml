@@ -1,0 +1,25 @@
+#%RAML 0.8
+title: Mulesoft File Upload API
+version: 1.0
+
+/file:
+  get:
+    description : show the static file upload page
+/upload_browser:
+  post:
+    description: File uploaded from browser
+    body:
+      multipart/form-data:
+    responses:
+      200:
+        body:
+           text/json:
+/upload_mule:
+  post:
+    description: File uploaded from mule service
+    body:
+      multipart/form-data:
+    responses:
+      200:
+        body:
+           text/json:
