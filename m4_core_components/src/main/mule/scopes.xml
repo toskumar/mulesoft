@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <http:request-config name="HTTP_Request_configuration_google" doc:name="HTTP Request configuration" doc:id="3c1c9a80-8369-425c-9cae-36ec24a0d6c1" >
+		<http:request-connection protocol="HTTPS" host="google.com" port="443" />
+	</http:request-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="3598c438-ef47-4d87-981a-acfc4b0789e9" >
+		<file:connection workingDir="c:\temp" />
+	</file:config>
+	<flow name="get:\scopes:m4_core_components-config">
+        <logger level="INFO" message="get:\scopes:m4_core_components-config" />
+		<set-variable value="#[attributes.queryParams.routeId as Number]" doc:name="routeId" doc:id="1f270b72-af18-44e8-a411-fc429a178979" variableName="routeId"/>
+		<choice doc:name="Choice" doc:id="17bb3743-be17-4fd4-98ed-5dd97aff998b" >
+			<when expression='#[vars.routeId == 1]'>
+				<logger level="INFO" doc:name="Logger" doc:id="d2fce483-407b-42c9-a1da-e09bbf70cb17" message="Async Scope Selected"/>
+				<flow-ref doc:name="async_Scopes_SubFlow" doc:id="c4896f38-1fc9-4bf6-9107-567460db1551" name="async_Scopes_SubFlow"/>
+			</when>
+			<when expression='#[vars.routeId ==2]'>
+				<logger level="INFO" doc:name="Logger" doc:id="0c9d41a4-73ac-4f27-98bf-3a549a49a046" message="Cache Scope Selected"/>
+				<flow-ref doc:name="cache_Scopes_SubFlow" doc:id="d12e44c5-5d2e-486b-94e4-2bf3810d8e96" name="cache_Scopes_SubFlow"/>
+			</when>
+			<when expression='#[vars.routeId == 3]'>
+				<logger level="INFO" doc:name="Logger" doc:id="91b6fb7b-006e-40fa-a756-9acbe93bb377" message="ForEach Scope Selected"/>
+				<flow-ref doc:name="forEach_Scopes_SubFlow" doc:id="9658168b-2e0c-4b26-96ca-996160807e39" name="forEach_Scopes_SubFlow"/>
+			</when>
+			<when expression='#[vars.routeId == 4]'>
+				<logger level="INFO" doc:name="Logger" doc:id="a98896ee-9e39-488e-a467-d0ab2f9b75a2" message="Try Scope Selected"/>
+				<flow-ref doc:name="try_Scopes_SubFlow" doc:id="7047dece-3196-4a9c-aefa-942724cab920" name="try_Scopes_SubFlow"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="f8b8e329-ba0f-4a96-84cc-69fb413318df" message="Default choice Selected"/>
+				<flow-ref doc:name="UntilSuccessful_Scopes_SubFlow" doc:id="51060794-5d6a-4271-b151-46ad9b48bab5" name="UntilSuccessful_Scopes_SubFlow"/>
+			
+</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a91ee5c1-2edf-4d9f-97bc-1321b579c93c" type="ANY">
+				<logger level="INFO" doc:name="Logger" doc:id="72589bc7-d673-4e5f-b818-bd19a86a0a1e" message="Error handling in m4_core_components flow "/>
+				<set-payload value="#[output  application/json
+---
+error]" doc:name="Set Payload" doc:id="a134d9ff-52f2-42ef-b655-ef081b582d43" mimeType="text/plain"/>
+			</on-error-continue>
+		</error-handler>       
+    
+</flow>
+	<sub-flow name="async_Scopes_SubFlow" doc:id="e57b8de6-fde6-4800-8b6d-380bf6913e6f" >
+		<async doc:name="Async1" doc:id="aeadba81-54f7-4899-ace6-c3f88fba0ca9" >
+			<http:request method="GET" doc:name="Request" doc:id="436e4a61-6bbd-430e-ac53-0d66f650f166" config-ref="HTTP_Request_configuration_google" path="/"/>
+			<logger level="INFO" doc:name="Logger" doc:id="2539f519-41ea-4f1c-b185-48c5067017e6" message='#[attributes.statusCode ++ "  -  " ++ attributes.reasonPhrase]'/>
+		</async>
+		<async doc:name="Async2" doc:id="a53945c8-d9ca-440f-aafd-9fe78e7f7eac">
+			<http:request method="GET" doc:name="Request" doc:id="547ce120-f4d9-410d-894a-16761be46d89" config-ref="HTTP_Request_configuration_google" path="/"/>
+			<logger level="INFO" doc:name="Logger" doc:id="16a8b5fe-1ef1-4c52-ae8e-b8e3dc172fe5" message='#[attributes.statusCode ++ "  -  " ++ attributes.reasonPhrase]'/>
+		</async>
+		<logger level="INFO" doc:name="Logger" doc:id="c4f62623-9868-4575-b703-fa99727aac7f" message="This statement may be shown first because the previous logger is Async"/>
+		<set-payload value="#['Async scope check the logs']" doc:name="Set Payload" doc:id="f628c1a1-669c-45ea-b7df-0b260fbefe6b" mimeType="text/plain"/>
+	</sub-flow>
+	<sub-flow name="cache_Scopes_SubFlow" doc:id="108d6d20-2dac-4ab9-8b2d-8faceb9da475" >
+		<ee:cache doc:name="Cache" doc:id="bae2337a-88b0-401c-86ff-07bff174025c" >
+			<http:request method="GET" doc:name="Request" doc:id="cd8dcc1c-3e60-4f1e-a941-6d3038cf8b0c" config-ref="HTTP_Request_configuration_google" path="/"/>
+			<set-variable value="#[payload]" doc:name="homePage" doc:id="e92e9dd3-e46f-419a-a271-1b3a1cffe1b3" variableName="homePage"/>
+			<set-payload value="#[payload]" doc:name="Set Payload" doc:id="1fda48ba-a017-4916-9fbe-f5eabef7bdf5" mimeType="text/plain"/>
+			<logger level="INFO" doc:name="Logger" doc:id="ff71f912-25a2-464c-b8f7-64cf97b4437d" message="Home page is Cached"/>
+		</ee:cache>
+		<logger level="INFO" doc:name="Logger" doc:id="f7881467-001a-4309-9fc4-fa309b6ac049" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="forEach_Scopes_SubFlow" doc:id="8783a34a-a217-4a01-8647-94277c421865" >
+		<set-variable value="#[output application/java
+---
+['Apple', 'Banana', 'Cherry', 'Dragon', 'ElderBerry', 'Fig', 'Grapes']]" doc:name="fruits" doc:id="097629db-4093-46ef-9dcc-1bd405e2c90b" variableName="fruits"/>
+		<foreach doc:name="For Each" doc:id="198bf8b8-a902-4788-b4da-3d9d6be48539" collection="#[vars.fruits]">
+			<logger level="INFO" doc:name="Logger" doc:id="9bde482f-dfa7-470a-9c63-9a6fcdd0bd80" message="#[payload]"/>
+		</foreach>
+		<set-payload value="#[output application/json
+---
+vars.fruits]" doc:name="Set Payload" doc:id="bcb76fd1-71c5-4d8d-948d-381d0f3435c7" mimeType="text/plain"/>
+	</sub-flow>
+	<sub-flow name="try_Scopes_SubFlow" doc:id="0096be1f-8abf-4421-a616-2340327da3ee" >
+		<logger level="INFO" doc:name="Before Try" doc:id="dd754a89-88bc-45cc-ba63-e481e6f2c14f" message="Before try block"/>
+		<try doc:name="Try" doc:id="85c46a96-b7b7-4647-9ffb-701855733bfc" >
+			<logger level="INFO" doc:name="Before read file processor" doc:id="53240440-92f2-49f4-b7a7-189be6a5e45d" message="Before read file processor"/>
+			<file:read doc:name="file" doc:id="acc13a9c-46fb-4d44-9979-079a37046bea" config-ref="File_Config" path="c:\temp\input\system.ini"/>
+			<logger level="INFO" doc:name="After read file processor" doc:id="49d69930-be80-4370-a979-838ced15931f" message="After read file processor"/>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="01ebec86-2131-47db-9bf6-1c4d541cec65" type="FILE:ACCESS_DENIED, FILE:CONNECTIVITY, FILE:FILE_LOCK, FILE:ILLEGAL_PATH, FILE:RETRY_EXHAUSTED" when='#[error.cause.message contains "fatal"]'>
+					<logger level="INFO" doc:name="Logger" doc:id="08095eb0-831e-4c1d-8383-82eeaf7bf0c6" message='#[error]' />
+				</on-error-continue>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8115f2fb-4cf0-47d9-93d3-d15f1207c4e7" type="EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+					<logger level="INFO" doc:name="Logger" doc:id="4bee420f-6b7a-43ec-a40e-a92c100f3b96" message="#[error]" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="After Try" doc:id="a6286df7-e2f2-43b3-9e9f-00057d2bd1df" message="After try block"/>
+		<logger level="INFO" doc:name="Before try" doc:id="ce1e995b-7139-4ff2-b481-36bf967ab784" message="Before try block"/>
+		<try doc:name="Try" doc:id="435d0fab-9553-455e-a0aa-5c5315b4ffc1" >
+			<logger level="INFO" doc:name="Before read file processor" doc:id="dd08d578-00e5-423c-bd6b-42491d6f06bf" message="Before read file processor"/>
+			<file:read doc:name="file" doc:id="688b870a-5f03-4095-89ea-88ea312b0e8a" config-ref="File_Config" path="c:\temp\input\system.ini"/>
+			<logger level="INFO" doc:name="After read file processor" doc:id="e2356d56-9adc-4276-b520-8fea2f8d5093" message="After read file processor"/>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="347bdf86-c5cd-4f7e-b61b-ec03c54dd0ac" type="FILE:ACCESS_DENIED, FILE:CONNECTIVITY, FILE:FILE_LOCK, FILE:ILLEGAL_PATH, FILE:RETRY_EXHAUSTED" when='#[error.cause.message contains "fatal"]'>
+					<logger level="INFO" doc:name="Logger" doc:id="303a93c3-79de-494b-a334-67108f05f308" message="#[error]"/>
+				</on-error-propagate>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="92a58384-24a8-44c7-bbc2-738c7ab1cd4b" type="EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+					<logger level="INFO" doc:name="Logger" doc:id="b2cac220-8c6d-4278-a54a-7ccaf10bf427" message="#[error]"/>
+				</on-error-propagate>
+			</error-handler>
+		
+</try>
+		<logger level="INFO" doc:name="After Try" doc:id="e04c8df0-156c-4231-bf1f-fa85d38fa73c" message="After try block"/>
+		<set-payload value="Try scope exected - Check logs for details" doc:name="Set Payload" doc:id="53ac74ca-abb1-44cf-825a-e5e6e445dfc4" />
+	</sub-flow>
+	<sub-flow name="UntilSuccessful_Scopes_SubFlow" doc:id="f193b0e9-34cb-4d07-9649-7f554977f1f1" >
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="b64a1cba-0901-42cd-b9ae-55c588e913bd" millisBetweenRetries="15000">
+			<file:read doc:name="Read" doc:id="cede88df-54ac-4c40-9e97-528cbf5e10d2" config-ref="File_Config" path="c:\temp\system.ini"/>
+		</until-successful>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="4da4b8d1-e1d8-4347-831c-3d5d3fdf3d65" mimeType="text/plain" />
+	</sub-flow>
+
+</mule>

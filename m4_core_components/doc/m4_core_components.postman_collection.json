@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "6653ebd4-3212-4618-b42f-86ba64087093",
+		"name": "m4_core_components",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "helloworld",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "transactionId",
+						"value": "1234567890",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/helloworld",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"helloworld"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "variables",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "transactionId",
+						"value": "1234567890",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/variables",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "flowControl",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "transactionId",
+						"type": "text",
+						"value": "1234567890"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/flowControl?routeId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"flowControl"
+					],
+					"query": [
+						{
+							"key": "routeId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "scopes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "transactionId",
+						"type": "text",
+						"value": "1234567890"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/scopes?routeId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"scopes"
+					],
+					"query": [
+						{
+							"key": "routeId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "error",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "transactionId",
+						"type": "text",
+						"value": "1234567890"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/error",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"error"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

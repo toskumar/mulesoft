@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+
+	<flow name="get:\error:m4_core_components-config">
+		<set-variable value="100" doc:name="balance" doc:id="5513969a-7b40-4df8-bbe5-9e6b23a68661" variableName="balance"/>
+		<set-variable value="#[attributes.queryParams.amount]" doc:name="amount" doc:id="240800df-28ea-4bfa-afa0-58d900709ffc" variableName="amount"/>
+		<choice doc:name="Choice" doc:id="2ff82997-948f-4ab1-a2bb-ed65cedce36d" >
+			<when expression="(vars.balance - vars.amount) &gt;= 0">
+				<set-variable value="vars.balance - vars.amount" doc:name="amount" doc:id="d75835e8-7aef-4770-a181-b7c9f9f812cf" variableName="amount"/>
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="4774a984-df7c-4800-9214-46ee5a69b11d" type="ACCOUNT:INSUFFICIENT_FUNDS" description="#['Cannot transfer $(vars.amount) since only $(vars.balance) is available in account.']"/>
+			</otherwise>
+		</choice>
+		<set-payload value="Fund transfered successfully" doc:name="Set Payload" doc:id="32a01b0e-fc3f-42f7-8470-5eca2d35ba61" mimeType="text/plain"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="65fac446-88f0-4f7d-8517-9003bce6fc87" type="ACCOUNT:INSUFFICIENT_FUNDS">
+				<logger level="INFO" doc:name="Logger" doc:id="2cd6a9f2-b378-463a-88d2-19bfb165462d" message="Raised custom error " />
+				<set-payload value="#[output application/json
+---
+error]" doc:name="Set Payload" doc:id="53b826ce-c0bd-4dfb-80b9-55ce2e743525" mimeType="text/plain" />
+			</on-error-continue>
+		</error-handler>
+
+
+	</flow>
+
+</mule>

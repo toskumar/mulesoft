@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+
+	<flow name="get:\component:m4_core_components-config">
+		<logger level="INFO" message="get:\component:m4_core_components-config" />
+		<set-variable value="#[attributes.queryParams.routeId as Number]" doc:name="routeId" doc:id="22ebb01f-f18b-49f8-8582-a595ece03f0e" variableName="routeId"/>
+		<choice doc:name="Choice" doc:id="537324ee-33d2-4a28-88c0-b14e40f329e4" >
+			<when expression="#[vars.routeId == 1]">
+				<flow-ref doc:name="Flow Reference" doc:id="5839f425-2efe-4067-8d9e-e545c32a9a5e" name="tansaction_Component_SubFlow"/>
+			</when>
+			<when expression="#[vars.routeId == 2]">
+				<flow-ref doc:name="Flow Reference" doc:id="011970a8-fb34-4bf8-91f2-8900ff5b8f64" name="CBE_Component_SubFlow"/>
+			</when>
+		</choice>
+	
+</flow>
+	<sub-flow name="tansaction_Component_SubFlow" doc:id="a7ddabe1-6155-4213-b043-72bdc468dfac" >
+		<tracking:transaction doc:name="Set Transaction Id" doc:id="4aabc656-e04e-4974-bc76-e98cd9630c34" id="#[attributes.headers.transactionId]" />
+		<set-payload value="#[output application/json
+---
+{
+	header : attributes.headers.transactionId
+}]" doc:name="Set Payload" doc:id="42329b93-0994-4878-bb18-87eca1155db6" />
+	</sub-flow>
+	<sub-flow name="CBE_Component_SubFlow" doc:id="d2f37f67-fb9e-47c9-b8e0-a83c118a8524" >
+		<set-payload value='#[output application/json
+---
+{
+	"AXIS" : 100.00,
+	"BOB" : 200.00,
+	"CANARA" : 300.00,
+	"DENA" : 400.00
+ 
+}]' doc:name="Set Payload" doc:id="d54198ff-3257-46df-8d13-07a5beb02469" />
+		<tracking:custom-event doc:name="Custom Business Event" doc:id="c29fb0a8-b997-4c06-9348-161a7d1ffec3" event-name="CBE"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="2b86b7e1-429d-4afd-ae88-64f8608af53a" />
+	</sub-flow>	
+
+</mule>

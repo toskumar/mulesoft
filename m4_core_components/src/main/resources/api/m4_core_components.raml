@@ -1,0 +1,69 @@
+#%RAML 1.0
+title: Mulesoft 4.1 core components example
+version: 1.0
+
+/helloworld:
+  get:
+    description: A simple HelloWorld example
+    responses: 
+      200:
+        body: 
+          text/xml:  
+/variables:
+  get:
+    description: Variables are used to store per-event values for use within a flow of a Mule app
+    responses: 
+      200:
+        body: 
+          text/xml:  
+/flowControl:
+  get:
+    description: Choice, First Successful, Round Robin and Scatter-Gather
+    queryParameters: 
+      routeId:
+        type: integer    
+    responses: 
+      200:
+        body: 
+          text/html:   
+/scopes:
+  get:
+    description: Scopes are Mule components that can wrap a group of operations within a flow to define a fine-grained behavior for them to apply
+    queryParameters: 
+      routeId:
+        type: integer       
+    responses: 
+      200:
+        body: 
+          text/html:  
+          
+/component:
+  get:
+    description: Error handler will be exected and the error will be routed to the first matching handler
+    queryParameters: 
+      routeId:
+        type: integer        
+    responses: 
+      200:
+        body: 
+          text/html:          
+/batch:
+  get:
+    description: Mule batch process
+    queryParameters: 
+      routeId:
+        type: integer
+    responses:
+      200:
+        body: 
+          text/html:
+/error:
+  get:
+    description: Error handler will be exected and the error will be routed to the first matching handler
+    queryParameters: 
+      amount:
+        type: number        
+    responses: 
+      200:
+        body: 
+          text/html:

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="get:\variables:m4_core_components-config">
+        <logger level="INFO" message="get:\variables:m4_core_components-config" />
+		<set-variable value="SenthilKumar" doc:name="firstName" doc:id="65705bfa-254a-49b6-ba1f-aa0b6e717124" variableName="firstName"/>
+		<set-variable value="Ganesan" doc:name="lastName" doc:id="170cdd97-c60e-4ed3-8c88-dc3fd16ab033" variableName="lastName"/>
+		<set-variable value="G" doc:name="Update lastName" doc:id="d236593b-a0de-4133-a1b2-c76370f68479" variableName="lastName"/>
+		<set-variable value='#[output application/json
+---
+{
+	no : 1234,
+	name: vars.firstName ++ vars.lastName,
+	salary: 10000.00,
+	doj : now() as String {format : "YYYY-MM-DD"}
+	
+}]' doc:name="employee" doc:id="25315970-6f36-4205-948a-4b88d02f14ec" variableName="employee" mimeType="application/json"/>
+		<logger level="INFO" doc:name="employee" doc:id="71997be4-dc8b-4b99-8d01-7d13020410cb" message="#[vars.employee]"/>
+		<set-payload value="#[output application/xml
+---
+{
+	employee: vars.employee
+}]" doc:name="Set Payload" doc:id="ee9d5fa5-7546-4c58-b6cb-13c85e138eb5" mimeType="application/json"/>
+		<remove-variable doc:name="employee" doc:id="4c7c7475-56ef-4ed4-999f-d6d01a3ac9c7" variableName="employee"/>
+		<remove-variable doc:name="firstName" doc:id="b7bd492f-25a3-455e-ab32-201925019f9d" variableName="firstName"/>
+		<remove-variable doc:name="lastName" doc:id="2a1c7273-8704-465b-bd02-5897ad0dd65e" variableName="lastName"/>
+    
+</flow>	
+</mule>

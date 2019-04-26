@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="get:\flowControl:m4_core_components-config">
+        <logger level="INFO" message="get:\flowControl:m4_core_components-config" />
+		<set-variable value="#[attributes.queryParams.routeId as Number]" doc:name="routeId" doc:id="d33b2cf0-3487-4c69-b489-f11260426af7" variableName="routeId"/>
+		<choice doc:name="Choice" doc:id="699bd54c-6317-4396-b70e-f6602790d911" >
+			<when expression="#[vars.routeId == 1]">
+				<logger level="INFO" doc:name="Logger" doc:id="f4d876ed-7a45-4e49-9130-77e74bcddee2" message="First Successful Flow Control Selected"/>
+				<flow-ref doc:name="Flow Reference" doc:id="4ac21060-653c-4160-aca6-148e43423b3b" name="firstSuccessful_flowControl_SubFlow"/>
+			</when>
+			<when expression="#[vars.routeId == 2]">
+				<logger level="INFO" doc:name="Logger" doc:id="4f91d296-16bd-483e-a59e-c6a19238aefd" message="Round Robin Selected"/>
+				<flow-ref doc:name="Flow Reference" doc:id="1f9079db-e171-4421-8b76-61ce9329a8a7" name="roundRobin_flowControl_SubFlow"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="cf9eebb5-a8d2-46b7-9896-59fe9921d3bc" message="Default choice Scatter-Gather selected"/>
+				<flow-ref doc:name="Flow Reference" doc:id="acfbc27e-f2aa-41fe-a865-c26a168aadf1" name="scatterGatter_flowControl_SubFlow"/>
+			</otherwise>
+		</choice>
+    
+</flow>
+	<sub-flow name="firstSuccessful_flowControl_SubFlow" doc:id="e49b56cf-8bbb-4e76-8866-d34ce1211ff4" >
+		<first-successful doc:name="First Successful" doc:id="4b46be3f-72bb-4dcd-a2ed-feb1078e2235" >
+			<route >
+				<file:read doc:name="c:/temp/abc.txt" doc:id="de30dd96-8932-4511-811a-e93251a8ee53" path="c:/temp/abc.txt"/>
+				<logger level="INFO" doc:name="Logger" doc:id="8960df34-303d-43d3-a83a-0ad8a3d05fd5" message="File read successful c:/temp/abc.txt"/>
+				<set-payload value="File read successful c:/temp/abc.txt" doc:name="Set Payload" doc:id="5d0dd57d-7cd8-471b-b7cb-1b5b55721761" />
+			</route>
+			<route >
+				<file:read doc:name="C:/Windows/system.ini" doc:id="9353b5a6-75dd-4f0b-b9c7-c72836e5b026" path="C:/Windows/system.ini"/>
+				<logger level="INFO" doc:name="Logger" doc:id="f512c021-007b-4bef-b5e3-9cccae47bef1" message="File read successful c:/Windows/system.ini"/>
+				<set-payload value="File read successful c:/Windows/system.ini" doc:name="Set Payload" doc:id="2ac3fbf2-db29-4204-ad8d-bac8923e95d3" />
+			</route>
+		</first-successful>
+	</sub-flow>
+	<sub-flow name="roundRobin_flowControl_SubFlow" doc:id="dc12ca37-6e18-4a7c-b10d-b941d667be11" >
+		<round-robin doc:name="Round Robin" doc:id="c3d86762-4061-400c-a27e-cec11aa2790e" >
+			<route >
+				<logger level="INFO" doc:name="Logger1" doc:id="8656a6ee-9d93-4a58-9016-4ab006529ee5" message="RoundRobin1"/>
+				<set-payload value="RoundRobin1" doc:name="Set Payload" doc:id="9ecc6b9f-c859-4d9f-9922-bed632267b83" />
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger2" doc:id="b0712a36-47ca-4adb-877e-16d43e260599" message="RoundRobin2"/>
+				<set-payload value="RoundRobin2" doc:name="Set Payload" doc:id="9977c520-d448-43de-9118-a9b8c24f4a21" />
+			</route>
+		</round-robin>
+	</sub-flow>
+	<sub-flow name="scatterGatter_flowControl_SubFlow" doc:id="325a5230-d58a-4900-967e-c7963890a2fd" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="39671efd-24f5-41ec-a62a-b266648723ba" >
+			<route >
+				<set-payload value="1234" doc:name="Set Payload" doc:id="813c27c6-d135-4d8e-92d3-f433775af422" />
+			</route>
+			<route >
+				<set-payload value="SenthilKumar" doc:name="Set Payload" doc:id="6c305f1c-c16f-4a10-9ada-b858dffae880" />
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="b5effc32-a1d9-4a0f-a34c-c58589fa9ae6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	number: payload[0].payload,
+	name : payload[1].payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="3f4655b0-4fd9-4eb2-89da-6ea16d2d4a81" />
+	</sub-flow>	
+
+</mule>

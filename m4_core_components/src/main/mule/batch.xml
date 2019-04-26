@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow name="get:\batch:m4_core_components-config">
+		<logger level="INFO" message="get:\batch:m4_core_components-config" />
+		<set-variable value="#[attributes.queryParams.routeId as Number]" doc:name="routeId" doc:id="5b935fd0-d596-4157-978c-047df2faa1db" variableName="routeId"/>
+		<choice doc:name="Choice" doc:id="0629cfc7-8e78-4397-a245-7928c408fa6f" >
+			<when expression="#[vars.routeId == 1]">
+				<flow-ref doc:name="Flow Reference" doc:id="dc9992a1-659d-4a00-b370-8d21ec9e1a9e" name="batchFlow1"/>
+			</when>
+		</choice>
+	
+</flow>	
+
+	<flow name="batchFlow1" doc:id="b8154e29-2046-4501-b247-1fb55ed1ddb9" >
+		<set-payload value="#[[1,2,3,4,5]]" doc:name="Set Payload" doc:id="c2e8c8b0-9d48-4c1f-917a-bbf251841ff9" />
+		<batch:job jobName="batchBatch_Job" doc:id="44d041f9-b512-4d66-b06a-bd2f6e8ec554" >
+			<batch:process-records >
+				<batch:step name="Batch_Step1" doc:id="612a085e-fe0c-404b-9da5-87418d651e11" >
+					<ee:transform doc:name="Transform Message" doc:id="92b39e60-6a85-46f0-b57c-8fdacb6dc058" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload * 10
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="fbcec7c7-440a-4205-ae43-c516376b9184" size="2">
+						<logger level="INFO" doc:name="Logger" doc:id="ebab7b92-ef1e-4dba-8e25-8caa7e8d263c" message="#[payload]"/>
+					</batch:aggregator>
+				</batch:step>
+				<batch:step name="Batch_Step2" doc:id="ae9f8ff4-0670-4796-ad78-bb12fb2039ef" >
+					<ee:transform doc:name="Transform Message" doc:id="098587c6-0825-4fce-93cf-6b9f002b5bb1" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload + 1]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="3384046f-43b3-4193-96df-77c189ebce24" size="2">
+						<logger level="INFO" doc:name="Logger" doc:id="1da4421b-2a4e-4ce6-90c6-11395456c48f" message="#[payload]"/>
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="a5d593b2-2f7b-4340-aa12-8cf6105f8087" message="#[payload]"/>
+				<set-payload value="#[%dw 2.0
+output application/json
+---
+{
+	batchJobInstanceId : payload.batchJobInstanceId,
+	processedRecords: payload.processedRecords,
+	sucessfulRecords: payload.successfulRecords,
+	totalRecords: payload.totalRecords
+}]" doc:name="Set Payload" doc:id="13967d04-0e88-41d2-abde-ccfd592588e8" />
+			</batch:on-complete>
+		</batch:job>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="d9cc9ff6-3e77-4e69-9d3f-7f75a790c9f9" />
+	</flow>
+</mule>

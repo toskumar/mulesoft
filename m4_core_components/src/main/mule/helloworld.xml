@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <flow name="get:\helloworld:m4_core_components-config">
+        <logger level="INFO" message="get:\helloworld:m4_core_components-config &gt;&gt; #[now()]" />
+		<set-payload value='#[%dw 2.0
+output application/xml
+---
+{
+	html: {
+		title : "Hello World",
+		body: {
+		h1: {
+			center : "Hello World " ++ now() as String {format : "dd-MM-YYYY"}
+		}
+		}
+	}	
+}]' doc:name="Set Payload" doc:id="7585a532-2f53-43c1-918f-38cd06971308" mimeType="text/html"/>
+    
+</flow>	
+</mule>
