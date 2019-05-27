@@ -28,9 +28,9 @@ Following are the enpoint configured in this example
 ``` 
 
 ## File upload flow
-![http file upload flow](https://github.com/toskumar/mulesoft/blob/master/http_file_upload/doc/http_file_upload_flow.jpg)
+![http file upload flow](https://github.com/toskumar/mulesoft/blob/master/m3_http_file_upload/doc/http_file_upload_flow.jpg)
 
 ## File upload static page
-![http file upload static page](https://github.com/toskumar/mulesoft/blob/master/http_file_upload/doc/http_file_upload_static_page.jpg)
+![http file upload static page](https://github.com/toskumar/mulesoft/blob/master/m3_http_file_upload/doc/http_file_upload_static_page.jpg)
 
 Open the link after code deployment in mule 3.9 runtime http://localhost:8081/api/file
