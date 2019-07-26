@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="getAmericanFlightsFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/american-flights" allowedMethods="GET" doc:name="HTTP"/>
+        <message-properties-transformer doc:name="Set Headers in Message Properties">
+            <add-message-property key="client_id" value="${american-ws-client-id}"/>
+            <add-message-property key="client_secret" value="${american-ws-client-secret}"/>
+        </message-properties-transformer>
+        <http:request config-ref="HTTP_Request_AmericanWS" path="${american-ws-path}" method="GET" doc:name="HTTP AmericanWS"/>
+    </flow>
+    <flow name="getAmericanFlightsByIdFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/american-flights/{ID}" allowedMethods="GET" doc:name="HTTP"/>
+        <message-properties-transformer doc:name="Set Headers in Message Properties">
+            <add-message-property key="client_id" value="${american-ws-client-id}"/>
+            <add-message-property key="client_secret" value="${american-ws-client-secret}"/>
+        </message-properties-transformer>
+        <set-variable variableName="ID" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Set Variable (ID)"/>
+        <http:request config-ref="HTTP_Request_AmericanWS" path="${american-ws-path}/#[flowVars.ID]" method="GET" doc:name="HTTP AmericanWS"/>
+    </flow>
+    <flow name="postAmericanFlightFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/american-flights" allowedMethods="POST" doc:name="HTTP"/>
+        <message-properties-transformer doc:name="Set Headers in Message Properties">
+            <add-message-property key="client_id" value="${american-ws-client-id}"/>
+            <add-message-property key="client_secret" value="${american-ws-client-secret}"/>
+            <add-message-property key="content-type" value="application/json"/>
+        </message-properties-transformer>
+        <set-payload value="#[message.payloadAs(java.lang.String)]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_AmericanWS" path="${american-ws-path}" method="POST" doc:name="HTTP AmericanWS"/>
+    </flow>
+    <flow name="deleteAmericanFlightFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/american-flights/{ID}" allowedMethods="DELETE" doc:name="HTTP"/>
+        <message-properties-transformer doc:name="Set Headers in Message Properties">
+            <add-message-property key="client_id" value="${american-ws-client-id}"/>
+            <add-message-property key="client_secret" value="${american-ws-client-secret}"/>
+        </message-properties-transformer>
+        <set-variable variableName="ID" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Set Variable (ID)"/>
+        <http:request config-ref="HTTP_Request_AmericanWS" path="${american-ws-path}/#[flowVars.ID]" method="DELETE" doc:name="HTTP AmericanWS"/>
+    </flow>
+</mule>
