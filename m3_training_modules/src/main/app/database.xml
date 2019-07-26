@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="getFlightsDBFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/db/american-flights" doc:name="HTTP" allowedMethods="GET"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="MySQL Database">
+            <db:parameterized-query><![CDATA[SELECT * FROM ${db.table.american}]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="22c768a0-379b-4a64-923f-dcb6c90a955f">
+            <dw:input-payload doc:sample="sample_data\list_map.dwl"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	ID: payload01.ID,
+	code: payload01.code1 ++ payload01.code2,
+	price: payload01.price as :number,
+	departureDate: payload01.takeOffDate as :string,
+	origin: payload01.fromAirport,
+	destination: payload01.toAirport,
+	emptySeats: payload01.seatsAvailable as :number,
+	plane: {
+		type: payload01.planeType,
+		totalSeats: payload01.totalSeats as :number
+	}
+})]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="getFlightsByIdDBFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/db/american-flights/{ID}" allowedMethods="GET" doc:name="HTTP"/>
+        <set-variable variableName="ID" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Set Variable (ID)"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="MySQL Database">
+            <db:parameterized-query><![CDATA[SELECT * FROM ${db.table.american} WHERE ID = #[flowVars.ID]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="22c768a0-379b-4a64-923f-dcb6c90a955f">
+            <dw:input-payload doc:sample="sample_data\list_map.dwl"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	ID: payload01.ID,
+	code: payload01.code1 ++ payload01.code2,
+	price: payload01.price as :number,
+	departureDate: payload01.takeOffDate as :string,
+	origin: payload01.fromAirport,
+	destination: payload01.toAirport,
+	emptySeats: payload01.seatsAvailable as :number,
+	plane: {
+		type: payload01.planeType,
+		totalSeats: payload01.totalSeats as :number
+	}
+})]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>

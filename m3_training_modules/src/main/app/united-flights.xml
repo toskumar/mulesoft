@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <flow name="getUnitedFlightsFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/united-flights" doc:name="HTTP"/>
+        <set-variable variableName="destination" value="#[message.inboundProperties.'http.query.params'.destination]" doc:name="Set Variable (destination)"/>
+        <http:request config-ref="HTTP_Request_UnitedWS" path="${united-rest-path}" method="GET" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="22b49245-c78c-4b08-b7a0-0360ea34b38c">
+            <dw:input-payload doc:sample="samples\united_flights.json" mimeType="application/json"/>
+            <dw:input-variable doc:sample="sample_data\string_1.dwl" mimeType="application/java" variableName="destination"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload.flights filter ($.destination == flowVars.destination)
+	map (flight) -> {
+		code: flight.code,
+		price: flight.price,
+		origin: flight.origin,
+		destination: flight.destination,
+		departureDate: flight.departureDate,
+		emptySeats: flight.emptySeats as :number,
+		plane : {
+			type: flight.planeType
+		}		
+}
+]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>

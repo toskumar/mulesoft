@@ -1,0 +1,124 @@
+{
+	"flights": [
+		{
+			"code": "ER38sd",
+			"price": 400,
+			"origin": "MUA",
+			"destination": "SFO",
+			"departureDate": "2015/03/20",
+			"planeType": "Boeing 737",
+			"airlineName": "United",
+			"emptySeats": 0
+		},
+		{
+			"code": "ER45if",
+			"price": 345.99,
+			"origin": "MUA",
+			"destination": "LAX",
+			"departureDate": "2015/02/11",
+			"planeType": "Boeing 737",
+			"airlineName": "United",
+			"emptySeats": 52
+		},
+		{
+			"code": "ER45jd",
+			"price": 346,
+			"origin": "MUA",
+			"destination": "LAX",
+			"departureDate": "2015/04/11",
+			"planeType": "Boeing 777",
+			"airlineName": "United",
+			"emptySeats": 12
+		},
+		{
+			"code": "ER0945",
+			"price": 423,
+			"origin": "MUA",
+			"destination": "LAX",
+			"departureDate": "2015/06/11",
+			"planeType": "Boeing 707",
+			"airlineName": "United",
+			"emptySeats": 0
+		},
+		{
+			"code": "ER9fje",
+			"price": 845,
+			"origin": "MUA",
+			"destination": "CLE",
+			"departureDate": "2015/07/11",
+			"planeType": "Boeing 727",
+			"airlineName": "United",
+			"emptySeats": 32
+		},
+		{
+			"code": "ER3kfd",
+			"price": 245,
+			"origin": "MUA",
+			"destination": "CLE",
+			"departureDate": "2015/08/11",
+			"planeType": "Boeing 747",
+			"airlineName": "United",
+			"emptySeats": 13
+		},
+		{
+			"code": "ER39rk",
+			"price": 945,
+			"origin": "MUA",
+			"destination": "SFO",
+			"departureDate": "2015/09/11",
+			"planeType": "Boeing 757",
+			"airlineName": "United",
+			"emptySeats": 54
+		},
+		{
+			"code": "ER39rj",
+			"price": 954,
+			"origin": "MUA",
+			"destination": "SFO",
+			"departureDate": "2015/02/12",
+			"planeType": "Boeing 777",
+			"airlineName": "United",
+			"emptySeats": 23
+		},
+		{
+			"code": "ER95jf",
+			"price": 234,
+			"origin": "MUA",
+			"destination": "PDF",
+			"departureDate": "2015/02/12",
+			"planeType": "Boeing 787",
+			"airlineName": "United",
+			"emptySeats": 23
+		},
+		{
+			"code": "ER49fd",
+			"price": 853,
+			"origin": "MUA",
+			"destination": "PDX",
+			"departureDate": "2015/02/13",
+			"planeType": "Boeing 777",
+			"airlineName": "United",
+			"emptySeats": 0
+		},
+		{
+			"code": "ER95jf",
+			"price": 483,
+			"origin": "MUA",
+			"destination": "PDX",
+			"departureDate": "2015/02/20",
+			"planeType": "Boeing 777",
+			"airlineName": "United",
+			"emptySeats": 95
+		},
+		{
+			"code": "ER04kf",
+			"price": 532,
+			"origin": "MUA",
+			"destination": "PDX",
+			"departureDate": "2015/02/12",
+			"planeType": "Boeing 777",
+			"airlineName": "United",
+			"emptySeats": 30
+		}
+	]
+}

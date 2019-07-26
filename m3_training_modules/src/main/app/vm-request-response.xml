@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+    <flow name="vm1Flow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/vm/request-response" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <vm:outbound-endpoint exchange-pattern="request-response" path="myVM1" doc:name="VM1"/>
+        <logger message="vm1Flow" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="vm1Flow1">
+        <vm:inbound-endpoint exchange-pattern="request-response" path="myVM1" doc:name="VM1"/>
+        <set-payload value="VM request response" doc:name="Set Payload"/>
+        <logger message="vm1Flow1" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>

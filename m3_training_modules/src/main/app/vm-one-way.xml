@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+    <flow name="vmFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/vm/one-way" allowedMethods="GET" doc:name="HTTP"/>
+        <set-variable variableName="abc" value="abc" doc:name="Variable (abc)"/>
+        <set-session-variable variableName="xyz" value="xyz" doc:name="Session Variable (xyz)"/>
+        <logger message="Main flow variable scope - Variable (abc) = #[flowVars.abc] ,  Session Variable (xyz) = #[sessionVars.xyz]" level="INFO" doc:name="Logger"/>
+        <flow-ref name="vmSub_Flow" doc:name="vmSub_Flow"/>
+        <vm:outbound-endpoint exchange-pattern="one-way" path="myVM" doc:name="VM"/>
+        <set-payload value="Main flow variable scope - Variable (abc) = #[flowVars.abc] , Session Variable (xyz) = #[sessionVars.xyz]" doc:name="Set Payload"/>
+    </flow>
+    <sub-flow name="vmSub_Flow">
+        <set-variable variableName="abc" value="abc1" doc:name="Update Variable (abc)"/>
+        <set-session-variable variableName="xyz" value="xyz1" doc:name="Update Session Variable (xyz)"/>
+        <logger message="Inside Subflow variable scope - Variable (abc) = #[flowVars.abc] , Session Variable (xyz) = #[sessionVars.xyz]" level="INFO" doc:name="Logger"/>
+    </sub-flow>
+    <flow name="vmFlow1">
+        <vm:inbound-endpoint exchange-pattern="one-way"  doc:name="VM" path="myVM"/>
+        <logger message="Inside vmFLow1 variable scope - Variable (abc) = #[flowVars.abc] , Session Variable (xyz) = #[sessionVars.xyz]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>
