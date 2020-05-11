@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/current/mule-amqp.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5ccfcb1d-8d89-4f66-bec7-14420c50f619" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<amqp:config name="AMQP_Config" doc:name="AMQP Config" doc:id="2b0af88e-9a6d-4d53-8cb7-4ae2d6d9e11c" >
+		<amqp:connection host="localhost" port="5672" username="guest" password="guest" />
+	</amqp:config>
+	<flow name="m4-rabbit-mq-publish-msg-flow" doc:id="352d02fa-c1e3-44eb-a442-2e16aee0534a" >
+		<http:listener doc:name="Listener" doc:id="20ec5fa8-d910-454d-97dc-72124dd9c9cf" config-ref="HTTP_Listener_config" path="/publish"/>
+		<set-payload doc:name="Set Payload" doc:id="826ad52e-3e8c-442d-a6fd-f472c285aa05" value="#[%dw 2.0
+output application/json
+---
+{
+	requestPath: attributes.requestPath,
+	queryParams: attributes.queryParams
+}]" mimeType="application/json" />
+		<amqp:publish doc:name="Publish" doc:id="942242f2-4f4b-4daa-85d0-cda4f937fd51" config-ref="AMQP_Config" exchangeName="first.exchange" deliveryMode="PERSISTENT" sendCorrelationId="ALWAYS">
+		</amqp:publish>
+	</flow>
+	<flow name="m4-rabbit-mq-receive-msg-flow" doc:id="b42294b5-5463-4863-8788-5649327fff40" >
+		<amqp:listener doc:name="Listener" doc:id="8bc3379d-a1d6-4490-871c-42a56610b6ac" config-ref="AMQP_Config" queueName="first-classic-queue"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ba66ca10-02d5-421e-a590-676d48024c4e" message="#[%dw 2.0
+output application/json
+---
+payload]"/>
+	</flow>
+</mule>
