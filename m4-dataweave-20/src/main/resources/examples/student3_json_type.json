@@ -1,0 +1,18 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "John",
+      "class": "10",
+      "average": 89.0,
+      "result": "PASS"
+    },
+    {
+      "id": "2",
+      "name": "Sobin",
+      "class": "10",
+      "average": 83.0,
+      "result": "PASS"
+    }
+  ]
+}    

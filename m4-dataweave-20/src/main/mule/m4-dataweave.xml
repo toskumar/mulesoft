@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="8f18e911-f400-4cd8-bffb-67173d64946e" />
+
+	<flow name="m4-excel-csv-flow" doc:id="82ca7854-0dc6-4907-b15a-2f1c8b0eec30" >
+		<file:read doc:name="Read" doc:id="cf011496-0b08-4628-a6f3-39c26d378fc4" config-ref="File_Config" path="#[p('app.home') ++ &quot;/data/&quot; ++ &quot;student.xlsx&quot;]" outputMimeType="application/xlsx"/>
+		<ee:transform doc:name="Transform Message" doc:id="c8dd5577-5f04-4fb2-885c-825761672f42" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv headerLineNumber = 0 , header = true
+
+var result = (arr) ->	if(avg(arr) > 70) 'PASS' else 'FAIL'
+---
+payload.Sheet1 map ( sheet1 , indexOfSheet1 )  -> {
+	"Id": sheet1.StudentNo as Number default 0,
+	"Name": sheet1.Name default "",
+	"Class": sheet1.Class as Number default 0,
+	"Average": avg([sheet1.English, sheet1.Hindi, sheet1.Maths, sheet1.Science, sheet1."Social Science"]),
+	"Result": result([sheet1.English, sheet1.Hindi, sheet1.Maths, sheet1.Science, sheet1."Social Science"]),
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9450a33d-4ae3-43a1-b849-61e7c252e0ea" message="#[payload]" />
+	
+</flow>
+	<flow name="m4-csv-excel-flow" doc:id="591bcc55-66a5-4907-bf09-ce9c4acf252e" >
+		<file:read doc:name="Read" doc:id="8af55438-176b-4313-b00f-b844bca8e591" path="#[p('app.home') ++ &quot;/data/&quot; ++ &quot;student.csv&quot;]" config-ref="File_Config" outputMimeType="application/csv"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0adebaf4-c11f-4b9d-a8cb-94424dbbedc8" message="#[payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="1924baba-0049-4f86-af83-a423a736d7c1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var average = (arr) -> avg(arr)
+var result = (arr) ->	if(average(arr) > 70) 'PASS' else 'FAIL'
+output application/xlsx
+---
+{
+	Sheet1: payload map ( payload01 , indexOfPayload01 ) -> {
+		Id: payload01.StudentNo,
+		Name: payload01.Name,
+		Class: payload01.Class,
+		Average: average([payload01.English default 0, payload01.Hindi default 0,  payload01.Maths default 0,  payload01.Science default 0, payload01."Social Science"]),
+		Result: result([payload01.English default 0, payload01.Hindi default 0,  payload01.Maths default 0,  payload01.Science default 0, payload01."Social Science"])
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="m4-xml-json-flow" doc:id="34892a58-62b0-4d59-819f-cbf4e09bd8e3">
+		<file:read doc:name="Read" doc:id="e15768b4-7f93-47a1-be60-775f1563d31d" config-ref="File_Config" path="#[p('app.home') ++ &quot;/data/&quot; ++ &quot;student.xml&quot;]" outputMimeType="application/xml"/>
+		<ee:transform doc:name="Transform Message" doc:id="b14642db-85da-449b-9505-01c0d5600e53" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var average = (arr) -> avg(arr)
+var result = (arr) -> if(average(arr) > 70) 'PASS' else 'FAIL'
+output application/json
+---
+{
+	students: payload.students.*student map (student, indexOfStudent ) -> {
+		id: student.@id,
+		name: student.name default "",
+		class: student.class,
+		average: average([student.english, student.hindi, student.maths, student.science, student.social]),
+		result: result([student.english, student.hindi, student.maths, student.science, student.social])
+		
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e22e7701-8054-48d6-b9be-dc3db598abb1" message="#[payload]"/>
+	</flow>
+	<flow name="m4-json-xml-flow" doc:id="b2df392e-4edf-48a4-883f-d3684dcf4956" >
+		<file:read doc:name="Read" doc:id="e50aba20-5cb6-4394-ba06-f0b5acae03c2" path="#[p('app.home') ++ &quot;/data/&quot; ++ &quot;student.json&quot;]" config-ref="File_Config" outputMimeType="application/json"/>
+		<ee:transform doc:name="Transform Message" doc:id="152f30d2-cf4f-472f-8da6-80ddb9183e66" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var average = (arr) -> avg(arr)
+var result = (arr) -> if(average(arr) > 70) 'PASS' else 'FAIL'
+output application/xml
+---
+{
+	students: {
+		(payload.students map ( student , indexOfStudent ) -> {
+			student @(id: student.id): {
+				name: student.name,
+				class: student.class ,
+				average: average([student.english, student.hindi, student.maths, student.science, student.social]),
+				result: result([student.english, student.hindi, student.maths, student.science, student.social])		
+			}
+		})
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b3a9d85f-f12a-41d6-ad36-50de66837505" message="#[payload]"/>
+	</flow>
+
+</mule>

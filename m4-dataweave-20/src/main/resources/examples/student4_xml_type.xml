@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<students xmns="http://example.com/students">
+	<student id="1">
+		<name>John</name>
+		<class>10</class>
+		<average>90</average>
+		<result>PASS</result>
+	</student>
+	<student id="2">
+		<name>Sobin</name>
+		<class>10</class>
+		<average>91</average>
+		<result>PASS</result>
+	</student>
+</students>

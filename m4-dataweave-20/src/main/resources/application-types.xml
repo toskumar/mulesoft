@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="student_csv_type" format="csv">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type student_csv_type = Array<{|  StudentNo: Number,   Name: String,   Class: Number,   English: Number,   Hindi: Number,   Maths: Number,   Science: Number,   "Social Science": Number|}> {"isQuotedString": "false",
+"header": "true",
+"headerLineNumber": "0"}
+
+]]></types:shape>
+      <types:properties>
+        <types:property name="headerLineNumber" value="0"/>
+        <types:property name="header" value="true"/>
+        <types:property name="isQuotedString" value="false"/>
+      </types:properties>
+    </types:type>
+    <types:type name="student_excel_type" format="excel">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type student_excel_type = {|
+  Sheet1?: Array<{|    Id: Number,     Name: String,     Class: Number,     Average: Number,     Result: String  |}>
+|}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="student1_excel_type" format="excel">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type student1_excel_type = {|
+  Sheet1?: Array<{|    StudentNo: Number,     Name: String,     Class: Number,     English: Number,     Hindi: Number,     Maths: Number,     Science: Number,     "Social Science": Number  |}>
+|}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="student1_csv_type" format="csv">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type student1_csv_type = Array<{|  Id: Number,   Name: String,   Class: Number,   Average: Number,   Result: String|}> {"isQuotedString": "false",
+"header": "true",
+"headerLineNumber": "0"}
+
+]]></types:shape>
+      <types:properties>
+        <types:property name="headerLineNumber" value="0"/>
+        <types:property name="header" value="true"/>
+        <types:property name="isQuotedString" value="false"/>
+      </types:properties>
+    </types:type>
+    <types:type name="student2_xml_type" format="xml">
+      <types:example format="xml" element="students" location="data/student.xml"/>
+    </types:type>
+    <types:type name="student2_json_type" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="student3_json_type" format="json">
+      <types:shape format="weave" example="examples/student3_json_type.json"><![CDATA[%dw 2.0
+
+type student3_json_type = {|
+  Students: Array<{|    Id: Number {"typeId": "int"},     Name: String,     Class: Number {"typeId": "int"},     Average: Number {"typeId": "int"},     Result: String  |}>
+|} {"example": "{\\\"Students\\\":[{\\\"Id\\\":1,\\\"Name\\\":\\\"John\\\",\\\"Class\\\":10,\\\"Average\\\":78,\\\"Result\\\":\\\"PASS\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="student3_xml_type" format="xml">
+      <types:example format="xml" element="students" location="examples/student3_xml_type.xml"/>
+    </types:type>
+    <types:type name="student4_json_type" format="json">
+      <types:shape format="weave" example="examples/student4_json_type.json"><![CDATA[%dw 2.0
+
+type student4_json_type = {|
+  students: Array<{|    id: String,     name: String,     class: String,     english: Number {"typeId": "int"},     hindi: Number {"typeId": "int"},     maths: Number {"typeId": "int"},     science: Number {"typeId": "int"},     social: Number {"typeId": "int"}  |}>
+|} {"example": "{\\\"students\\\":[{\\\"id\\\":\\\"1\\\",\\\"name\\\":\\\"John\\\",\\\"class\\\":\\\"10\\\",\\\"english\\\":86,\\\"hindi\\\":82,\\\"maths\\\":93,\\\"science\\\":89,\\\"social\\\":95},{\\\"id\\\":\\\"2\\\",\\\"name\\\":\\\"Sobin\\\",\\\"class\\\":\\\"10\\\",\\\"english\\\":82,\\\"hindi\\\":69,\\\"maths\\\":90,\\\"science\\\":95,\\\"social\\\":79}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="student4_xml_type" format="xml">
+      <types:example format="xml" element="students" location="examples/student4_xml_type.xml"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1924baba-0049-4f86-af83-a423a736d7c1">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student_csv_type"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="student_excel_type"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#c8dd5577-5f04-4fb2-885c-825761672f42">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student1_excel_type"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="student1_csv_type"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#b14642db-85da-449b-9505-01c0d5600e53">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student3_xml_type"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="student3_json_type"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#152f30d2-cf4f-472f-8da6-80ddb9183e66">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student4_json_type"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="student4_xml_type"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

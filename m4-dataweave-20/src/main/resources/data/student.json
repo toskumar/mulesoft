@@ -1,0 +1,54 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "John",
+      "class": "10",
+      "english": 86,
+      "hindi": 82,
+      "maths": 93,
+      "science": 89,
+      "social": 95
+    },
+    {
+      "id": "2",
+      "name": "Sobin",
+      "class": "10",
+      "english": 82,
+      "hindi": 69,
+      "maths": 90,
+      "science": 95,
+      "social": 79
+    },
+    {
+      "id": "3",
+      "name": "Peter",
+      "class": "10",
+      "english": 75,
+      "hindi": 93,
+      "maths": 72,
+      "science": 75,
+      "social": 69
+    },
+    {
+      "id": "4",
+      "name": "Edwin",
+      "class": "10",
+      "english": 85,
+      "hindi": 95,
+      "maths": 97,
+      "science": 99,
+      "social": 80
+    },
+    {
+      "id": "5",
+      "name": "Jacob",
+      "class": "10",
+      "english": 88,
+      "hindi": 75,
+      "maths": 92,
+      "science": 90,
+      "social": 79
+    }
+  ]
+}

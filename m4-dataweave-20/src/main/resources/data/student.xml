@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<students xmns="http://example.com/students">
+ <student id="1">
+   <name>John</name>
+   <class>10</class>
+   <english>86</english>
+   <hindi>82</hindi>
+   <maths>93</maths>
+   <science>89</science>
+   <social>95</social>
+ </student>
+ <student id="2">
+   <name>Sobin</name>
+   <class>10</class>
+   <english>82</english>
+   <hindi>69</hindi>
+   <maths>90</maths>
+   <science>95</science>
+   <social>79</social>
+ </student>
+ <student id="3">
+   <name>Peter</name>
+   <class>10</class>
+   <english>75</english>
+   <hindi>93</hindi>
+   <maths>72</maths>
+   <science>75</science>
+   <social>69</social>
+ </student>
+ <student id="4">
+   <name>Edwin</name>
+   <class>10</class>
+   <english>85</english>
+   <hindi>95</hindi>
+   <maths>97</maths>
+   <science>99</science>
+   <social>80</social>
+ </student>
+ <student id="5">
+   <name>Jacob</name>
+   <class>10</class>
+   <english>88</english>
+   <hindi>75</hindi>
+   <maths>92</maths>
+   <science>90</science>
+   <social>79</social>
+ </student>
+</students>

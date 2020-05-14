@@ -1,0 +1,24 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "John",
+      "class": "10",
+      "english": 86,
+      "hindi": 82,
+      "maths": 93,
+      "science": 89,
+      "social": 95
+    },
+    {
+      "id": "2",
+      "name": "Sobin",
+      "class": "10",
+      "english": 82,
+      "hindi": 69,
+      "maths": 90,
+      "science": 95,
+      "social": 79
+    }
+  ]
+}

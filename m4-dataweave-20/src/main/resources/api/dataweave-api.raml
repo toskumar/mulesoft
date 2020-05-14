@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: Dataweave 2.0 example
+version: 1.0
+
+/excel2csv:
+  get:
+    description: Dataweave to transform excel to csv
+    responses: 
+      200:
+        body: 
+          application/csv:
+
+/csv2excel:
+  get:
+    description: Dataweave to transform csv to excel
+    responses: 
+      200:
+        body: 
+          application/xlsx:
+
+/xml2json:
+  get:
+    description: Dataweave to transform xml to json
+    responses: 
+      200:
+        body: 
+          application/json: 
+          
+/json2xml:
+  get:
+    description: Dataweave to transform json to xml
+    responses: 
+      200:
+        body: 
+          application/xml:                                 

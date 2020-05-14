@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<students xmns="http://example.com/students">
+ <student id="1">
+   <name>John</name>
+   <class>10</class>
+   <english>86</english>
+   <hindi>82</hindi>
+   <maths>93</maths>
+   <science>89</science>
+   <social>95</social>
+ </student>
+ <student id="2">
+   <name>Sobin</name>
+   <class>10</class>
+   <english>82</english>
+   <hindi>69</hindi>
+   <maths>90</maths>
+   <science>95</science>
+   <social>79</social>
+ </student>
+</students>
