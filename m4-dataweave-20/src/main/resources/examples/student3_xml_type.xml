@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<students xmns="http://example.com/students">
+<students xmlns="http://example.com/student">
  <student id="1">
    <name>John</name>
    <class>10</class>
