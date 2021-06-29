@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cred-vault="http://www.mulesoft.org/schema/mule/cred-vault"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/cred-vault http://www.mulesoft.org/schema/mule/cred-vault/current/mule-cred-vault.xsd">
+	<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="bc622944-8413-4542-9b5f-ccad09ad1fdf">
+		<http:listener-connection host="0.0.0.0"
+			port="8082" />
+	</http:listener-config>
+	<cred-vault:config name="cred-vault-config" host="127.0.0.1" port="8081" protocol="HTTP" />
+	
+	<flow name="CredVaultFlow" doc:id="9ed158ed-3659-4f42-bd40-914b50578a21" >
+		<http:listener doc:name="Listener" doc:id="b0a85f96-c0c8-4fc6-bd4c-7b219c850105" config-ref="HTTP_Listener_config" path="/hello"/>
+		<cred-vault:system-info config-ref="cred-vault-config" doc:name="System Info" doc:id="8b77b1a2-937e-4e88-8b44-82266c8ee060" system="#[attributes.queryParams.system]" env="#[attributes.queryParams.env]" profile="#[attributes.queryParams.profile default 'default']"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9ee45716-63ae-44c3-825f-f56e1137a797" message="#[payload]"/>
+	</flow>	
+</mule>
