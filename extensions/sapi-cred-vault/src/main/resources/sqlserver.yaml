@@ -1,0 +1,24 @@
+dev:
+  default:
+    username: dev-user1
+    password: dev-password
+    database: hello
+    server: db.server.com
+    port: 1521
+
+  profile1:
+    username: dev-user1
+    password: dev1-password
+    database: hello
+    server: db.server.com
+    port: 1521    
+
+test:
+  default:
+    username: test-user1
+    password: test-password
+    database: hello
+    server: test.server.com
+    port: 1521    
+      
+  

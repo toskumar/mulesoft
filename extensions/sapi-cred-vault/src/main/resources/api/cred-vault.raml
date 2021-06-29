@@ -1,0 +1,24 @@
+#%RAML 1.0
+title: sapi credential vault service
+version: v1
+
+/cred:
+  get:
+    queryParameters:
+      system:
+        type: string
+        required: true
+      env:
+        type: string
+        required: true
+      profile:
+        type: string
+        required: false
+        default: default  
+    responses:
+      200:
+        body:
+          application/json:
+                            
+              
+        

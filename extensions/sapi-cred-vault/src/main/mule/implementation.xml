@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="CredVaultFlow" doc:id="0f4f834c-e914-4dd1-8c52-7356a9fb4418" >
+		<set-variable value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	system: attributes.queryParams.system default null,&#10;	env: attributes.queryParams.env default null,&#10;	profile: attributes.queryParams.profile default 'default'&#10;}]" doc:name="qp" doc:id="ca342d70-c4f3-4cfa-8318-fd025d0be960" variableName="qp" />
+		<ee:transform doc:name="Transform Message" doc:id="5d3b1712-17a9-4208-b073-e77fb92b012b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var yaml = readUrl('classpath://' ++ vars.qp.system ++ '.yaml', 'application/yaml')
+---
+yaml filterObject (lower($$) ~= lower(vars.qp.env)) mapObject $ filterObject (lower($$) ~= lower(vars.qp.profile)) mapObject $
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6cf1c476-c8a9-4ddf-8529-7d563afb66a4" >
+				<ee:transform doc:name="Transform Message" doc:id="ea2c3c29-998c-4f58-b9ec-a410557aab7d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: splitBy(error.description, '\n') [0] default error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>
