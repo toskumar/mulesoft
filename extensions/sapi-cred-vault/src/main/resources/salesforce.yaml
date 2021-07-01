@@ -1,0 +1,21 @@
+dev:
+  default:
+    username: dev-user1
+    password: dev-password1
+    securityToken: dev-security-token1
+    authenticationUrl: https://dev1-salesforce.com
+
+  profile1:
+    username: dev-user2
+    password: dev-password2
+    securityToken: dev-security-token2
+    authenticationUrl: https://dev2-salesforce.com 
+
+test:
+  default:
+    username: test-user1
+    password: test-password
+    securityToken: test-security-token
+    authenticationUrl: https://test1-salesforce.com
+      
+  
