@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<global-property doc:name="Global Property" doc:id="0b577d03-3f1a-409f-8987-3a1ebd2eddfc" name="secret.key" value="cloudhub-mulesoft-secret-key-123" />
+	<secure-properties:config name="SQLServer_Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c38bcf56-1fc1-419e-8258-7874bea3f3f2" file="sqlserver.yaml" key="${secret.key}" />
+	<secure-properties:config name="SalesForce_Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="50ca476e-e829-4dfa-b31e-6cde715f26d5" file="salesforce.yaml" key="${secret.key}" />	
+</mule>

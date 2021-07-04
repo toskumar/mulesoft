@@ -1,24 +1,23 @@
-dev:
-  default:
-    username: dev-user1
-    password: dev-password
-    database: hello
-    server: db.server.com
-    port: 1521
+sqlserver:
+  dev:
+    default:
+      username: "![oi2dohSBc4EjBejRX9JFQuNO/C3GGO32o9fi3K1bsEQ=]"
+      password: "![oi2dohSBc4EjBejRX9JFQk4aUah/yN0SHdqQVcD1GCs=]"
+      database: "![oi2dohSBc4EjBejRX9JFQtV5kCPwcV4oOV2HfM1sDBY=]"
+      server: "![oi2dohSBc4EjBejRX9JFQrc+mkYsjQjFi+ABrYz+Tvw=]"
+      port: "![oi2dohSBc4EjBejRX9JFQpQ6GO5Y4u8lRYtofTmNvP4=]"
 
-  profile1:
-    username: dev-user1
-    password: dev1-password
-    database: hello
-    server: db.server.com
-    port: 1521    
+    profile1:
+      username: "![oi2dohSBc4EjBejRX9JFQuNO/C3GGO32o9fi3K1bsEQ=]"
+      password: "![NOB0ghHlAC1KbaDE82sN7ShTVduZ6mNiEeRJykxGxzc=]"
+      database: "![NOB0ghHlAC1KbaDE82sN7fvq2fsy8pjVTEL05oxuPu0=]"
+      server: "![NOB0ghHlAC1KbaDE82sN7SwtnRtZb07LByHVHytfpL4=]"
+      port: "![NOB0ghHlAC1KbaDE82sN7TBktq9vfWXkPcG5ogaFR/8=]"
 
-test:
-  default:
-    username: test-user1
-    password: test-password
-    database: hello
-    server: test.server.com
-    port: 1521    
-      
-  
+  test:
+    default:
+      username: "![oi2dohSBc4EjBejRX9JFQuNO/C3GGO32o9fi3K1bsEQ=]"
+      password: "![+o4VeSiHrtCOjWhHas6/y779RDeTqwwq6RwJYc7+bNw=]"
+      database: "![+o4VeSiHrtCOjWhHas6/ywCLNmRvm6APXauC/HFXydw=]"
+      server: "![+o4VeSiHrtCOjWhHas6/yzfGNER8oSJhoB1kV1q23pI=]"
+      port: "![+o4VeSiHrtCOjWhHas6/y4CSn5D2d9az+rkPAp++AfY=]"

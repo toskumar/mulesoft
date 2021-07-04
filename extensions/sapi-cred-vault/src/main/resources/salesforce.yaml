@@ -1,21 +1,20 @@
-dev:
-  default:
-    username: dev-user1
-    password: dev-password1
-    securityToken: dev-security-token1
-    authenticationUrl: https://dev1-salesforce.com
+salesforce:
+  dev:
+    default:
+      username: "![7qONRJb2vZTVoUp84bhNQumtK70ZkYZO1ifJODgGSIk=]"
+      password: "![WMGa+OTz6CC9Y+17BR88DmeXBD9Dy7+DX10Rlcz+xXU=]"
+      securityToken: "![21akZ3XKDyiwedLfqPtwlrjARbSTrYR0pAbp0hFLbow=]"
+      authenticationUrl: "![zkTbSBzFloPTqiVrmzdTzs0JneQnj3paFjeB4C5YbHjl9Hoi1UYSoBh7gzpgYawJ]"
 
-  profile1:
-    username: dev-user2
-    password: dev-password2
-    securityToken: dev-security-token2
-    authenticationUrl: https://dev2-salesforce.com 
+    profile1:
+      username: "![/Ze5coioCpl+w02ayqC5uVQQ1l0l/nA6eJH1aGZD5S0=]"
+      password: "![/Ze5coioCpl+w02ayqC5uf6/KXaBZAwCZ7KOMAar4Vg=]"
+      securityToken: "![/Ze5coioCpl+w02ayqC5uQvysojRX/7tL+9Ccv02c4E=]"
+      authenticationUrl: "![dk0DT2pkYQ2tDfWKnl1rGxh6zYEgJhce4VmopHGNb9HJV8zn+5JKcdPPWiZbXeFX]"
 
-test:
-  default:
-    username: test-user1
-    password: test-password
-    securityToken: test-security-token
-    authenticationUrl: https://test1-salesforce.com
-      
-  
+  test:
+    default:
+      username: "![nCPvIDRwERicChLgwwNv7jlom4w5mxhbFueGayBJf+w=]"
+      password: "![nCPvIDRwERicChLgwwNv7kiiE/wUnoDDnGq5XeaCfP8=]"
+      securityToken: "![nCPvIDRwERicChLgwwNv7o9aIQxda5PDjb0ju8MiVqI=]"
+      authenticationUrl: "![BGnG6fD0bSuim4OYylA47OM2OibW1B2xK8TiNjYuokhPkYfzKt7S0DXpEsI1w2Aw]"
