@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 
-	<flow name="get:\error:m4_core_components-config">
+	<flow name="get:\error-continue:m4_core_components-config">
 		<set-variable value="100" doc:name="balance" doc:id="5513969a-7b40-4df8-bbe5-9e6b23a68661" variableName="balance"/>
 		<set-variable value="#[attributes.queryParams.amount]" doc:name="amount" doc:id="240800df-28ea-4bfa-afa0-58d900709ffc" variableName="amount"/>
 		<choice doc:name="Choice" doc:id="2ff82997-948f-4ab1-a2bb-ed65cedce36d" >
@@ -26,11 +26,52 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 				<logger level="INFO" doc:name="Logger" doc:id="2cd6a9f2-b378-463a-88d2-19bfb165462d" message="Raised custom error " />
 				<set-payload value="#[output application/json
 ---
-error]" doc:name="Set Payload" doc:id="53b826ce-c0bd-4dfb-80b9-55ce2e743525" mimeType="text/plain" />
+error]" doc:name="Set Payload" doc:id="53b826ce-c0bd-4dfb-80b9-55ce2e743525"/>
 			</on-error-continue>
 		</error-handler>
 
 
 	</flow>
+	<flow name="get:\error-propagate:m4_core_components-config" doc:id="451ce462-bbf3-4f01-962d-641f3265de16" >
+		<set-variable value="100" doc:name="balance" doc:id="95ab6139-a880-47b5-b2f3-ce862aedcc73" variableName="balance" />
+		<set-variable value="#[attributes.queryParams.amount]" doc:name="amount" doc:id="9e943e95-315b-40d5-8116-ab86180c8ac2" variableName="amount" />
+		<choice doc:name="Choice" doc:id="889287d1-9618-4c96-bed1-87030608941c" >
+			<when expression="(vars.balance - vars.amount) &gt;= 0" >
+				<set-variable value="vars.balance - vars.amount" doc:name="amount" doc:id="3f9f47d8-37ce-4875-b7e9-2bcd54c5c363" variableName="amount" />
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="e1e32c5a-a4f1-4048-ba66-a0cc2b284e65" type="ACCOUNT:INSUFFICIENT_FUNDS" description="#['Cannot transfer $(vars.amount) since only $(vars.balance) is available in account.']" />
+			</otherwise>
+		</choice>
+		<set-payload value="Fund transfered successfully" doc:name="Set Payload" doc:id="6feab22f-ec01-427f-92f3-5c8402ebc650" mimeType="text/plain" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f9b446a9-4284-49d6-9ce6-c5bcf70666bc" type="ACCOUNT:INSUFFICIENT_FUNDS">
+				<logger level="INFO" doc:name="Logger" doc:id="e9c32e4f-3619-4b73-8002-7136778bdf3b" message="Raised custom error " />
+				<set-variable value="503" doc:name="httpStatus" doc:id="3c70f4d5-b5ad-4247-a246-5b32d7202525" variableName="httpStatus"/>
+				<set-payload value="#[output application/json&#10;---&#10;{&#10;	message: error.description&#10;}]" doc:name="Set Payload" doc:id="4cb96cb0-8db3-4574-bbdc-afa5894ba5d1"/>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get:\error-handler:m4_core_components-config" doc:id="b2d827d4-80f1-45fc-a99f-84f47d559d31" >
+		<set-variable value="100" doc:name="balance" doc:id="871c8955-3988-47fa-a08a-6d4e3265cf2c" variableName="balance" />
+		<set-variable value="#[attributes.queryParams.amount]" doc:name="amount" doc:id="7dd7bab4-be15-4f66-9130-e2705782840d" variableName="amount" />
+		<choice doc:name="Choice" doc:id="12d5d2e2-c28c-466d-86af-0b7be9e7b39c" >
+			<when expression="(vars.balance - vars.amount) &gt;= 0" >
+				<set-variable value="vars.balance - vars.amount" doc:name="amount" doc:id="55399fb2-0917-44f1-986c-1450b3b730fe" variableName="amount" />
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="2fad0b96-2d1d-4f5e-83a8-ae4ce034541c" type="ACCOUNT:INSUFFICIENT_FUNDS" description="#['Cannot transfer $(vars.amount) since only $(vars.balance) is available in account.']" />
+			</otherwise>
+		</choice>
+		<set-payload value="Fund transfered successfully" doc:name="Set Payload" doc:id="89466ea9-f29b-459a-b6e7-a3eaa54027f4" mimeType="text/plain" />
+		<error-handler ref="my_ErrorError_Handler" />
+	</flow>
+	<error-handler name="my_ErrorError_Handler" doc:id="6d6eef9d-c599-4b95-a8cc-080c7f6a1f9a" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="52f8ced1-19e6-4e26-a95d-a2db2cffd478" >
+			<logger level="INFO" doc:name="Logger" doc:id="3c380a9b-0d8a-4dfc-b55f-b167eb7fd844" message="Raised custom error " />
+			<set-variable value="503" doc:name="httpStatus" doc:id="54f9c564-c618-43ef-9b9d-ab57692dcd6c" variableName="httpStatus"/>
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;	message: error.description&#10;}]" doc:name="Set Payload" doc:id="0a181b32-87b9-4945-b049-508fbba1e729" />
+		</on-error-propagate>
+	</error-handler>
 
 </mule>

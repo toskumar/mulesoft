@@ -8,14 +8,14 @@ version: 1.0
     responses: 
       200:
         body: 
-          text/xml:  
+          application/xml:  
 /variables:
   get:
     description: Variables are used to store per-event values for use within a flow of a Mule app
     responses: 
       200:
         body: 
-          text/xml:  
+          application/xml:  
 /flowControl:
   get:
     description: Choice, First Successful, Round Robin and Scatter-Gather
@@ -25,7 +25,7 @@ version: 1.0
     responses: 
       200:
         body: 
-          text/html:   
+          text/plain:   
 /scopes:
   get:
     description: Scopes are Mule components that can wrap a group of operations within a flow to define a fine-grained behavior for them to apply
@@ -35,7 +35,7 @@ version: 1.0
     responses: 
       200:
         body: 
-          text/html:  
+          text/plain:  
           
 /component:
   get:
@@ -46,7 +46,7 @@ version: 1.0
     responses: 
       200:
         body: 
-          text/html:          
+          text/plain:          
 /batch:
   get:
     description: Mule batch process
@@ -56,8 +56,8 @@ version: 1.0
     responses:
       200:
         body: 
-          text/html:
-/error:
+          text/plain:
+/error-continue:
   get:
     description: Error handler will be exected and the error will be routed to the first matching handler
     queryParameters: 
@@ -65,5 +65,24 @@ version: 1.0
         type: number        
     responses: 
       200:
-        body: 
-          text/html:
+      500:    
+    
+/error-propagate:
+  get:
+    description: Error handler will be exected and the error will be routed to the first matching handler
+    queryParameters: 
+      amount:
+        type: number        
+    responses: 
+      200:
+      503:
+      
+/error-handler:
+  get:
+    description: Error handler will be exected and the error will be routed to the first matching handler
+    queryParameters: 
+      amount:
+        type: number        
+    responses: 
+      200:
+      503:
