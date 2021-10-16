@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	
 </flow>
 	<flow name="batchFlow1" doc:id="b8154e29-2046-4501-b247-1fb55ed1ddb9">
-		<set-payload value="#[1 to 100]" doc:name="Set Payload" doc:id="c2e8c8b0-9d48-4c1f-917a-bbf251841ff9" />
+		<set-payload value="#[1 to 200]" doc:name="Set Payload" doc:id="c2e8c8b0-9d48-4c1f-917a-bbf251841ff9" />
 		<logger level="INFO" doc:name="Logger" doc:id="51d8ff43-8625-4fb9-8666-0ded7b8b64a9" message="#[payload]" />
 		<set-variable value="#[uuid()]" doc:name="batchJobId" doc:id="3042eebe-8ba0-4ff9-ae54-a68c4be4f999" variableName="batchJobId"/>
 		<batch:job jobName="batchBatch_Job" doc:id="44d041f9-b512-4d66-b06a-bd2f6e8ec554" blockSize="5" jobInstanceId="#[vars.batchJobId]">
@@ -34,9 +34,6 @@ output application/java
 dw::Runtime::wait(randomInt(5000),5000)]]></ee:set-variable>
 						</ee:variables>
 					</ee:transform>
-					<batch:aggregator doc:name="Batch Aggregator" doc:id="33da5b10-276c-4d89-8ca2-89fc682f5e1e" size="5">
-						<logger level="INFO" doc:name="Logger" doc:id="e8ab54c1-6b9b-4a3c-9352-62275954fbe5" message="#[payload]"/>
-					</batch:aggregator>
 				</batch:step>
 				<batch:step name="Batch_Step2" doc:id="ae9f8ff4-0670-4796-ad78-bb12fb2039ef">
 					<logger level="INFO" doc:name="Logger" doc:id="59dc88e0-5259-47a7-8e74-3edc868790c6" message="#['step 2 : ' ++ payload]" />
@@ -47,11 +44,14 @@ dw::Runtime::wait(randomInt(5000),5000)]]></ee:set-variable>
 							<ee:set-variable variableName="x"><![CDATA[%dw 2.0
 output application/java
 ---
-dw::Runtime::wait(randomInt(2000), 2000)]]></ee:set-variable>
+dw::Runtime::wait(randomInt(3000), 3000)]]></ee:set-variable>
 						</ee:variables>
 					</ee:transform>
 				</batch:step>
 				<batch:step name="Batch_Step3" doc:id="5218514c-9564-4305-973f-8cea0740a592" >
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="33da5b10-276c-4d89-8ca2-89fc682f5e1e" size="5">
+						<logger level="INFO" doc:name="Logger" doc:id="e8ab54c1-6b9b-4a3c-9352-62275954fbe5" message="#[payload]" />
+					</batch:aggregator>
 					<logger level="INFO" doc:name="Logger" doc:id="a77886bc-d695-415f-a0f7-868ab52e8f20" message="#['step 3 : ' ++ payload]" />
 					<ee:transform doc:name="Transform Message" doc:id="6db76b7e-57b3-4fab-81ff-650d50c7a8d8" >
 						<ee:message />
@@ -59,7 +59,7 @@ dw::Runtime::wait(randomInt(2000), 2000)]]></ee:set-variable>
 							<ee:set-variable variableName="x" ><![CDATA[%dw 2.0
 output application/java
 ---
-dw::Runtime::wait(randomInt(2000), 2000)]]></ee:set-variable>
+dw::Runtime::wait(randomInt(1000), 1000)]]></ee:set-variable>
 						</ee:variables>
 					</ee:transform>
 				</batch:step>
@@ -69,6 +69,6 @@ dw::Runtime::wait(randomInt(2000), 2000)]]></ee:set-variable>
 				<logger level="INFO" doc:name="Logger" doc:id="a5d593b2-2f7b-4340-aa12-8cf6105f8087" message="#[payload]" />
 			</batch:on-complete>
 		</batch:job>
-		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	batchJobInstanceId : vars.batchJobId,&#10;	startDate: now() as LocalDateTime,&#10;	batchName: 'my-batch-job1'&#10;}]" doc:name="Set Payload" doc:id="d9cc9ff6-3e77-4e69-9d3f-7f75a790c9f9" />
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	batchJobId : vars.batchJobId,&#10;	startDate: now() as LocalDateTime,&#10;	batchName: 'my-batch-job1',&#10;	batchStatus: 'STARTED'&#10;}]" doc:name="Set Payload" doc:id="d9cc9ff6-3e77-4e69-9d3f-7f75a790c9f9" />
 	</flow>
 </mule>
