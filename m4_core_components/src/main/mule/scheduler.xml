@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="schedulerFlow1" doc:id="9d6a0cd1-a459-483b-bcfb-6ec0c1c74531" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="94ef9e62-483a-429f-a062-c9bca8cdd973" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="c04516a6-8bba-4b9c-96e0-08bc0d38e9bc" message="scheduler1 invoked  " />
+	</flow>
+	<flow name="schedulerFlow2" doc:id="fa17ad06-8e92-457e-b40c-fcedeb6e0ee7" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="c2a6640d-6e2c-4984-a73f-af0a4ec30156" >
+			<scheduling-strategy >
+				<cron expression="0 0/2 * 1/1 * ? *" timeZone="America/Los_Angeles"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="2a346a40-11f9-481f-aee8-e85e695a5dfd" message="scheduler2 invoked  "/>
+	</flow>
+</mule>

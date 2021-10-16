@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get:\transform:m4_core_components-config" doc:id="d32c92c2-4fd5-48aa-879f-4d4e46311e25" >
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;[&#10;  {&#10;    "number": "1",&#10;    "fname": "senthil",&#10;    "lastname": "kumar",&#10;    "age": "44"&#10;  },&#10;  {&#10;    "number": "2",&#10;    "fname": "Rahul",&#10;    "lastname": "raja",&#10;    "age": "21"&#10;  }&#10;]]' doc:name="Set Payload" doc:id="ce7bee41-ce38-41d5-95a2-094bb08f146f" />
+		<ee:transform doc:name="Transform Message" doc:id="fc9607a2-f5f7-4392-bedb-74c02d3aee6b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+employees: {
+    employee: payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
