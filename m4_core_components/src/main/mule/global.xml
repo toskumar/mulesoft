@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	    <http:request-config name="HTTP_Request_configuration_google" doc:name="HTTP Request configuration" doc:id="3c1c9a80-8369-425c-9cae-36ec24a0d6c1" >
+		<http:request-connection protocol="HTTPS" host="google.com" port="443" />
+	</http:request-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="3598c438-ef47-4d87-981a-acfc4b0789e9">
+	</file:config>
+
+</mule>

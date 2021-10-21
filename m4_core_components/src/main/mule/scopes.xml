@@ -6,12 +6,6 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
-    <http:request-config name="HTTP_Request_configuration_google" doc:name="HTTP Request configuration" doc:id="3c1c9a80-8369-425c-9cae-36ec24a0d6c1" >
-		<http:request-connection protocol="HTTPS" host="google.com" port="443" />
-	</http:request-config>
-	<file:config name="File_Config" doc:name="File Config" doc:id="3598c438-ef47-4d87-981a-acfc4b0789e9" >
-		<file:connection workingDir="c:\temp" />
-	</file:config>
 	<flow name="get:\scopes:m4_core_components-config">
         <logger level="INFO" message="get:\scopes:m4_core_components-config" />
 		<set-variable value="#[attributes.queryParams.routeId as Number]" doc:name="routeId" doc:id="1f270b72-af18-44e8-a411-fc429a178979" variableName="routeId"/>
@@ -84,7 +78,7 @@ vars.fruits]" doc:name="Set Payload" doc:id="bcb76fd1-71c5-4d8d-948d-381d0f3435c
 		<logger level="INFO" doc:name="Before Try" doc:id="dd754a89-88bc-45cc-ba63-e481e6f2c14f" message="Before try block"/>
 		<try doc:name="Try" doc:id="85c46a96-b7b7-4647-9ffb-701855733bfc" >
 			<logger level="INFO" doc:name="Before read file processor" doc:id="53240440-92f2-49f4-b7a7-189be6a5e45d" message="Before read file processor"/>
-			<file:read doc:name="file" doc:id="acc13a9c-46fb-4d44-9979-079a37046bea" config-ref="File_Config" path="c:\temp\input\system.ini"/>
+			<file:read doc:name="file" doc:id="acc13a9c-46fb-4d44-9979-079a37046bea" path="c:\temp\input\system.ini"/>
 			<logger level="INFO" doc:name="After read file processor" doc:id="49d69930-be80-4370-a979-838ced15931f" message="After read file processor"/>
 			<error-handler>
 				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="01ebec86-2131-47db-9bf6-1c4d541cec65" type="FILE:ACCESS_DENIED, FILE:CONNECTIVITY, FILE:FILE_LOCK, FILE:ILLEGAL_PATH, FILE:RETRY_EXHAUSTED" when='#[error.cause.message contains "fatal"]'>
@@ -99,7 +93,7 @@ vars.fruits]" doc:name="Set Payload" doc:id="bcb76fd1-71c5-4d8d-948d-381d0f3435c
 		<logger level="INFO" doc:name="Before try" doc:id="ce1e995b-7139-4ff2-b481-36bf967ab784" message="Before try block"/>
 		<try doc:name="Try" doc:id="435d0fab-9553-455e-a0aa-5c5315b4ffc1" >
 			<logger level="INFO" doc:name="Before read file processor" doc:id="dd08d578-00e5-423c-bd6b-42491d6f06bf" message="Before read file processor"/>
-			<file:read doc:name="file" doc:id="688b870a-5f03-4095-89ea-88ea312b0e8a" config-ref="File_Config" path="c:\temp\input\system.ini"/>
+			<file:read doc:name="file" doc:id="688b870a-5f03-4095-89ea-88ea312b0e8a" path="c:\temp\input\system.ini"/>
 			<logger level="INFO" doc:name="After read file processor" doc:id="e2356d56-9adc-4276-b520-8fea2f8d5093" message="After read file processor"/>
 			<error-handler >
 				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="347bdf86-c5cd-4f7e-b61b-ec03c54dd0ac" type="FILE:ACCESS_DENIED, FILE:CONNECTIVITY, FILE:FILE_LOCK, FILE:ILLEGAL_PATH, FILE:RETRY_EXHAUSTED" when='#[error.cause.message contains "fatal"]'>
@@ -116,7 +110,7 @@ vars.fruits]" doc:name="Set Payload" doc:id="bcb76fd1-71c5-4d8d-948d-381d0f3435c
 	</sub-flow>
 	<sub-flow name="UntilSuccessful_Scopes_SubFlow" doc:id="f193b0e9-34cb-4d07-9649-7f554977f1f1" >
 		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="b64a1cba-0901-42cd-b9ae-55c588e913bd" millisBetweenRetries="15000">
-			<file:read doc:name="Read" doc:id="cede88df-54ac-4c40-9e97-528cbf5e10d2" config-ref="File_Config" path="c:\temp\system.ini"/>
+			<file:read doc:name="Read" doc:id="cede88df-54ac-4c40-9e97-528cbf5e10d2" path="c:\temp\system.ini"/>
 		</until-successful>
 		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="4da4b8d1-e1d8-4347-831c-3d5d3fdf3d65" mimeType="text/plain" />
 	</sub-flow>
