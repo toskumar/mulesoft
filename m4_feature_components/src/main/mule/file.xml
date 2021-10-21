@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<flow name="fileCopyFlow" doc:id="0e934b28-19fc-4d87-90b6-1454e52be934" >
+		<file:list doc:name="c:\temp\src" doc:id="50154f16-8530-4e0c-a601-d070fe108521" config-ref="File_Config" directoryPath="c:\temp\src"/>
+		<foreach doc:name="For Each" doc:id="9918299b-3028-49e7-b1ee-b6a4a29fc1bb" >
+			<file:copy doc:name="c:\temp\target" doc:id="01eb50d2-88ee-4fe3-8f9f-30aa8c807c59" config-ref="File_Config" sourcePath="#[attributes.path]" targetPath="c:\temp\target" overwrite="true"/>
+			<file:delete doc:name="sourceFile" doc:id="219f803d-3baf-42c3-9b85-2e0da358424e" config-ref="File_Config" path="#[attributes.path]"/>
+		</foreach>
+		<set-payload value="file list-copy-delete successful " doc:name="Set Payload" doc:id="79a03b7a-2b6a-4614-9cff-848c681f16b3" />
+	</flow>
+	<flow name="fileMoveFlow" doc:id="a4757546-e665-46d9-8153-1f4c767bc1da" >
+		<file:list doc:name="c:\temp\src" doc:id="2bd8c7e7-5996-4bff-aab0-dfe370f6be0e" config-ref="File_Config" directoryPath="c:\temp\src"/>
+		<foreach doc:name="For Each" doc:id="e6a6fcee-9a4f-4eb0-a37f-728f72206347" >
+			<file:move doc:name="c:\temp\target" doc:id="4ac860f6-f9ae-4aae-b73b-392f59a7cd5b" config-ref="File_Config" sourcePath="#[attributes.path]" targetPath="c:\temp\target" overwrite="true"/>
+		</foreach>
+		<set-payload value="file list-move successfully" doc:name="Set Payload" doc:id="af61a296-e1cb-493e-adc7-22d19081037f" />
+	</flow>
+	<flow name="fileReadWriteFlow" doc:id="e477cd54-1d60-40ab-9a6b-3f6a52b04919" >
+		<file:read doc:name="c:\temp\src\hello.txt" doc:id="fd3a5735-faf4-484f-b7ea-5710c4daf551" config-ref="File_Config" path="c:\temp\src\hello.txt"/>
+		<file:write doc:name="c:\temp\target\hello.txt" doc:id="e1ca7646-07a1-4087-843f-f61534251edf" config-ref="File_Config" path="c:\temp\target\hello.txt"/>
+		<file:rename doc:name="c:\temp\target\hello1.txt" doc:id="76d2d654-03ba-4f08-bb38-a7ca9e96d22f" config-ref="File_Config" path="c:\temp\target\hello.txt" to="hello1.txt" overwrite="true"/>
+		<set-payload value="File read-write-rename successful" doc:name="Set Payload" doc:id="848c1aed-1076-4d0b-b3a7-849048608ff7" />
+	</flow>
+	<flow name="fileNewOrUpdatedFlow" doc:id="fa62691c-5e9f-49a8-a2de-9ef388406d57" >
+		<file:listener doc:name="On New or Updated File" doc:id="84d674a9-5c68-476a-8e2e-3d7d248f1b6c" config-ref="File_Config" directory="c:\temp\src" watermarkMode="MODIFIED_TIMESTAMP">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5000" />
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="8fa5959a-cfbd-4c0e-8637-2a74fe6b7f59" message="#['File created or modified : ' ++ attributes.path]"/>
+	</flow>
+</mule>
