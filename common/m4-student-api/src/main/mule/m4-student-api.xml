@@ -16,7 +16,7 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-		<flow-ref doc:name="m4-audit-end" doc:id="87e6a98f-4fca-41bd-9ac9-ceea0ac9e854" name="m4-audit-end"/>
+		<flow-ref doc:name="m4-audit-begin" doc:id="87e6a98f-4fca-41bd-9ac9-ceea0ac9e854" name="m4-audit-begin"/>
 		<apikit:router config-ref="m4-student-api-config" />
 		<flow-ref doc:name="m4-audit-end" doc:id="2a9ae02f-2908-4468-84ea-5a2785d9ce5f" name="m4-audit-end"/>
     </flow>
