@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_91609e89_a699_47c0_bc32_9457bac56d59_Output_Payload = {|
+  errorCode: String | Null, 
+  errorDateTime: String {"format": "dd-MM-yyyy'T'HH:mm:ss.SSS"}, 
+  errorMessage: String | Null, 
+  errorDescription: String | Null
+|}
+

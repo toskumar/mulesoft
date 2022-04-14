@@ -5,86 +5,59 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<configuration doc:name="Configuration" doc:id="ccf5f2f5-3146-451b-be3e-a0090bb91946" defaultErrorHandler-ref="Common_Error_Handler" />
 	<error-handler name="Common_Error_Handler">
             <on-error-propagate type="APIKIT:BAD_REQUEST">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Bad request"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
+			<set-variable value="400" doc:name="httpStatus" doc:id="74ce2496-2d28-4d89-81ca-4e482fd1e44a" variableName="httpStatus"/>
+			<set-variable value="Bad Request" doc:name="errorMessage" doc:id="2dfc7c09-9113-4229-a709-ff2b231dbdb1" variableName="errorMessage"/>
+			<flow-ref doc:name="m4-common-error" doc:id="baf0f40e-8cad-4b78-91ad-3bb624610386" name="m4-common-error"/>
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
+			<set-variable value="404" doc:name="httpStatus" doc:id="b30e479a-2706-44fb-bb7d-149896636e7f" variableName="httpStatus" />
+			<set-variable value="Resource not found" doc:name="errorMessage" doc:id="77d91196-da30-4aa8-9336-fdb9fb968eb8" variableName="errorMessage" />
+			<flow-ref doc:name="m4-common-error" doc:id="8d8ba36e-a21a-47be-8079-97da81dd435f" name="m4-common-error" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Method not allowed"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
+			<set-variable value="405" doc:name="httpStatus" doc:id="0b9cee93-9840-4f25-9a96-35c683f67db6" variableName="httpStatus" />
+			<set-variable value="Method not allowed" doc:name="errorMessage" doc:id="a1372c85-b737-4995-9d4b-a43f12cf6f60" variableName="errorMessage" />
+			<flow-ref doc:name="m4-common-error" doc:id="757bc200-c381-470d-a751-97b028a4e9f3" name="m4-common-error" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Not acceptable"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
+			<set-variable value="406" doc:name="httpStatus" doc:id="83ea8943-d07b-461c-82db-f960e54d67a0" variableName="httpStatus" />
+			<set-variable value="Not acceptable" doc:name="errorMessage" doc:id="4c4d3120-d7a7-463e-a16e-dc388ea30c19" variableName="errorMessage" />
+			<flow-ref doc:name="m4-common-error" doc:id="e9af0a23-8833-4886-8d6c-01698776c0cc" name="m4-common-error" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Unsupported media type"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
+			<set-variable value="415" doc:name="httpStatus" doc:id="2f38b91d-2871-4659-aa98-7986fd8f7b37" variableName="httpStatus" />
+			<set-variable value="Unsupported media type" doc:name="errorMessage" doc:id="36bd5b44-40fb-4f3f-bd0c-44d0cb3eb7dc" variableName="errorMessage" />
+			<flow-ref doc:name="m4-common-error" doc:id="2f32b5f2-8948-4f97-927e-f986c51a4829" name="m4-common-error" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
+			<set-variable value="501" doc:name="httpStatus" doc:id="45b9c9c5-1cdb-4fff-b838-d2a60f1a1cdc" variableName="httpStatus" />
+			<set-variable value="Not Implemented" doc:name="errorMessage" doc:id="38109fde-b240-49e4-8f3c-e34d72b4426c" variableName="errorMessage" />
+			<flow-ref doc:name="m4-common-error" doc:id="4da31823-e2c1-493e-9638-fc3360e07a2a" name="m4-common-error" />
+            </on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e4c45eff-4136-49de-bff5-76bff37ca0be" type="ANY">
+			<flow-ref doc:name="m4-common-error" doc:id="f7c6754d-e869-403f-8fb8-7f2427cafead" name="m4-common-error" />
+		</on-error-propagate>
+        </error-handler>
+	<sub-flow name="m4-common-error" doc:id="91609e89-a699-47c0-bc32-9457bac56d59" >
+		<ee:transform doc:name="Error Message" doc:id="613b9911-186c-44f6-a200-b3ab28e6e7fc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Not Implemented"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
-            </on-error-propagate>
-        </error-handler>
+{
+ errorCode: vars.httpStatus default "null" , 
+ errorMessage: if(isEmpty(vars.errorMessage)) error.errorMessage default "null" else vars.errorMessage,
+ errorDescription: error.description default "null",
+ errorDateTime: (now() >> "Europe/London") as String {format: "dd-MM-yyyy'T'HH:mm:ss.SSS"},
+ correlationId: correlationId
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="ERROR" doc:name="Error" doc:id="ba913be3-1d9e-4c85-bdc7-b348e7aaaccf" message="#[payload]"/>
+	</sub-flow>
 	<flow name="m4-audit-begin" doc:id="b4109902-614f-4275-9206-c0a09cdf7be4" >
 		<logger level="INFO" doc:name="Begin" doc:id="cbe3c311-5159-4455-b3ab-f46b92b4e963" message="Common audit begin #[now()]"/>
 	</flow>
