@@ -1,0 +1,33 @@
+#%RAML 1.0 Library
+types:
+  EmployeeShort:
+    type: object
+    properties:
+      id:
+        type: number
+        required: true
+      name:
+        type: string
+        minLength: 2
+        maxLength: 50
+        required: true
+      doj:
+        type: date-only
+      age:
+        type: integer
+
+  Department:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+                            
+  EmployeeFull:
+    type: EmployeeShort
+    properties:
+      dob: 
+        type: date-only
+      department:
+        type: Department 

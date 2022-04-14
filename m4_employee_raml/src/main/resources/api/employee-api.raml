@@ -1,0 +1,127 @@
+#%RAML 1.0
+  
+title: Employee API
+version: v1
+baseUri: https://localhost:8082/{version}/employee
+description: Employee CRUD operation
+
+mediaType: 
+- application/json 
+
+protocols: 
+- HTTPS
+
+uses:
+  lib: type/employee.raml
+
+traits:
+  env: !include trait/environment.raml
+      
+/employee:
+  is: [env]
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: [lib.EmployeeFull]
+  /{id}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: lib.EmployeeFull
+    delete:  
+      responses:
+        200:
+           body:
+            application/json:
+              example: |
+                {
+                  "message": "employee record deleted",
+                  "status": 200
+                }
+  put:
+    body:
+      application/json:
+        type: lib.EmployeeFull
+    responses:
+      200:
+         body:
+          application/json:
+            example: |
+              {
+                "message": "employee record updated",
+                "status": 200
+              }
+    
+  post:
+    body:
+      application/json:
+        type: lib.EmployeeFull
+    responses:
+      201:
+         body:
+          application/json:
+            example: |
+              {
+                "message": "employee record added",
+                "status": 201
+              }
+  delete:  
+    body:
+      application/json:
+        type: lib.EmployeeFull
+    responses:
+      200:
+         body:
+          application/json:
+            example: |
+              {
+                "message": "employee record deleted",
+                "status": 200
+              }
+
+/department:
+  is: [env]
+  get:
+    responses:
+      200:
+         body:
+          application/json:
+            type: [lib.Department]
+  /{id}:
+    get:
+      responses:
+        200:
+           body:
+            application/json:
+              type: lib.Department
+  put:          
+    body:
+      application/json:
+        type: lib.Department
+    responses:
+      200:
+         body:
+          application/json:
+            type: [lib.Department]            
+  post:  
+    body:
+      application/json:
+        type: lib.Department
+    responses:
+      200:
+         body:
+          application/json:
+            type: [lib.Department]               
+  delete:
+    body:
+      application/json:
+        type: lib.Department
+    responses:
+      200:
+         body:
+          application/json:
+            type: [lib.Department]            
